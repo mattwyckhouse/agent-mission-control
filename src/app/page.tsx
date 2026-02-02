@@ -90,7 +90,7 @@ function StatusCard({ label, value, color }: { label: string; value: number; col
   )
 }
 
-function AgentCard({ agent }: { agent: any }) {
+function AgentCard({ agent }: { agent: Agent }) {
   const statusColors: Record<string, { bg: string; glow: string }> = {
     online: { bg: 'bg-[#67AD5C]', glow: 'shadow-[0_0_8px_#67AD5C]' },
     busy: { bg: 'bg-[#F19D38]', glow: '' },
