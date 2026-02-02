@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+:root {
+  /* Mission Control Design Tokens */
+  --mc-bg-base: #111214;
+  --mc-bg-elevated: #1B1D20;
+  --mc-bg-surface: #2F3236;
+  --mc-text-primary: #FAFAFB;
+  --mc-text-secondary: #E7E8E9;
+  --mc-text-muted: #A8ACAF;
+  --mc-accent-primary: #1BD0B8;
+  --mc-accent-secondary: #F27229;
+}
+
+body {
+  background: var(--mc-bg-base);
+  color: var(--mc-text-primary);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--mc-bg-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--mc-bg-surface);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4E5257;
+}
