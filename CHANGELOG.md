@@ -52,6 +52,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **Formatters** — Date, number, text utilities (f3437a9)
 - **222 unit tests** — Full coverage
 
+#### Demo Data & Polish (Feb 3)
+- **Playwright E2E tests** — Full test suite: dashboard, tasks, ralph, costs, navigation (dd2d3b5)
+- **Agent performance variance** — Realistic varied metrics across agents (7c008d8)
+- **Demo task seeding** — Realistic task data distribution (a66c7b9)
+- **Real charts with varied data** — Dynamic chart data based on agent metrics (af19931)
+- **Theme-aware Ralph components** — Consistent colors in light/dark mode (293ebb8)
+- **Definition of Done** — Added to CLAUDE.md (888deef)
+
+### Fixed
+
+- Light mode theme compatibility for all components (cdfb3e1)
+
 ### Added — Phase 2: Real-Time & Sync
 
 - **Real-time subscription hooks** — Live updates for dashboard data (dfeb5d9)
