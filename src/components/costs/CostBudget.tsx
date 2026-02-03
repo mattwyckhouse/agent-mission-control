@@ -124,14 +124,14 @@ export function CostBudget({
           value={percentUsed}
           max={100}
           size="md"
-          color={
+          variant={
             status === "exceeded" ? "error" :
             status === "critical" ? "warning" :
             status === "warning" ? "warning" :
             "success"
           }
           showLabel
-          labelFormat={(val) => `${Math.min(val, 100).toFixed(0)}%`}
+          label={`${Math.min(percentUsed, 100).toFixed(0)}% of budget`}
         />
       </div>
 
