@@ -131,6 +131,6 @@ When all tests pass:
 
 ## Run Frequency
 
-- **Daily at 9 AM** via launchd
+- **Daily at 1 AM** via launchd
 - **On-demand** via `./scripts/e2e/daily-e2e-test.sh`
 - **Optional:** On Vercel deploy webhook

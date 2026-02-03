@@ -13,7 +13,7 @@ Based on Ryan Carson's approach: Agent-driven E2E that adapts to UI changes and 
 scripts/e2e/
 ├── daily-e2e-test.sh       # Main test runner
 ├── test-flows.md           # Test scenarios for the agent
-├── com.missioncontrol.e2e.plist  # launchd schedule (9 AM daily)
+├── com.missioncontrol.e2e.plist  # launchd schedule (1 AM daily)
 └── README.md               # This file
 ```
 
