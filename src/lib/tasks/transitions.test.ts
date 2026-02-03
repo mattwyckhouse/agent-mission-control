@@ -8,8 +8,8 @@ import {
   STATUS_CONFIG,
   KANBAN_COLUMNS,
   ALL_COLUMNS,
-  type TaskStatus,
 } from "./transitions";
+import type { TaskStatus } from "@/types";
 
 describe("Task Status Transitions", () => {
   describe("isValidTransition", () => {
