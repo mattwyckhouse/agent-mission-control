@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- **Theme toggle** — Light/dark mode switch with system preference detection (0d4336f)
+- **Toast notification system** — Non-blocking alerts with auto-dismiss (0d4336f)
+- **Skeleton components** — Loading states for cards, grids, metrics (0d4336f)
+- **Accessibility improvements** — ARIA labels, keyboard navigation, focus management (0d4336f)
+- **Design audit documentation** — Pixel design system compliance report (c73b1ee)
+- **CLAUDE.md enhancements** — Next.js 16 patterns and component examples (a5187e1)
+- **AgentCard navigation** — Click to navigate to agent detail page (1dfc040)
 - **AgentGrid component** — Responsive grid layout for agent cards with auto-fill (c157c76)
 - **MetricCard component** — Display key metrics with trend indicators (6bf7ec8)
 - **Data layer** — TypeScript interfaces, mock data, and utility functions (238f6c1)
