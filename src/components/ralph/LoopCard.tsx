@@ -3,23 +3,30 @@
 import { cn } from "@/lib/utils";
 import { GlassCard } from "@/components/cards/GlassCard";
 import { StatusBadge } from "@/components/ui/StatusBadge";
-import { SegmentedProgress } from "@/components/ui/ProgressBar";
-import { Clock, Zap, DollarSign, ChevronRight } from "lucide-react";
+import { ProgressBar } from "@/components/ui/ProgressBar";
+import { 
+  CheckCircle2, 
+  XCircle, 
+  Clock, 
+  Zap, 
+  DollarSign,
+  ChevronRight,
+  User,
+  FileCode
+} from "lucide-react";
 import type { RalphLoop } from "@/types";
 
 interface LoopCardProps {
   loop: RalphLoop;
-  onClick?: () => void;
   className?: string;
+  onClick?: () => void;
 }
 
-function formatDuration(startTime: string, endTime?: string): string {
-  const startMs = new Date(startTime).getTime();
-  const endMs = endTime ? new Date(endTime).getTime() : Date.now();
+function formatDuration(startMs: number, endMs: number): string {
   const diffMs = endMs - startMs;
   const minutes = Math.floor(diffMs / 60000);
   const hours = Math.floor(minutes / 60);
-
+  
   if (hours > 0) {
     const remainingMins = minutes % 60;
     return `${hours}h ${remainingMins}m`;
@@ -33,11 +40,22 @@ function formatDate(isoString: string): string {
     return date.toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
     });
   } catch {
-    return "Unknown";
+    return "--";
+  }
+}
+
+function formatTime(isoString: string): string {
+  try {
+    const date = new Date(isoString);
+    return date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  } catch {
+    return "--:--";
   }
 }
 
@@ -51,147 +69,180 @@ function formatNumber(num: number): string {
   return num.toLocaleString();
 }
 
-function getPhaseStatus(
-  phase: RalphLoop["phase"]
-): "active" | "idle" | "working" | "error" | "success" {
-  switch (phase) {
-    case "done":
-      return "success";
-    case "blocked":
-      return "error";
-    case "build":
-      return "working";
-    case "interview":
-    case "plan":
-      return "active";
-    default:
-      return "idle";
-  }
+function formatCost(cost: number): string {
+  return "$" + cost.toFixed(2);
 }
 
-function getPhaseLabel(phase: RalphLoop["phase"]): string {
-  switch (phase) {
-    case "done":
-      return "Complete";
-    case "blocked":
-      return "Blocked";
-    case "build":
-      return "Building";
-    case "interview":
-      return "Interview";
-    case "plan":
-      return "Planning";
-    default:
-      return "Unknown";
-  }
-}
-
-export function LoopCard({ loop, onClick, className }: LoopCardProps) {
+export function LoopCard({ loop, className, onClick }: LoopCardProps) {
   const isComplete = loop.phase === "done";
   const isBlocked = loop.phase === "blocked";
-  const progress = Math.round((loop.currentStep / loop.totalSteps) * 100);
+  const progress = loop.totalSteps > 0 
+    ? Math.round((loop.currentStep / loop.totalSteps) * 100) 
+    : 0;
+  
+  const startTime = new Date(loop.startedAt).getTime();
+  const endTime = new Date(loop.lastUpdate).getTime();
+  const duration = formatDuration(startTime, endTime);
 
   return (
     <GlassCard
       className={cn(
-        "group transition-all duration-200",
-        onClick && "cursor-pointer hover:border-brand-teal",
-        isComplete && "border-l-2 border-l-success",
-        isBlocked && "border-l-2 border-l-error",
+        "group",
+        onClick && "cursor-pointer",
         className
       )}
+      hover={!!onClick}
       onClick={onClick}
     >
-      <div className="space-y-3">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <h3 className="font-heading font-semibold text-text-primary truncate">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            {isComplete && (
+              <CheckCircle2 className="w-5 h-5 text-success flex-shrink-0" />
+            )}
+            {isBlocked && (
+              <XCircle className="w-5 h-5 text-error flex-shrink-0" />
+            )}
+            <h3 className="text-base font-heading font-semibold text-text-primary truncate">
               {loop.name}
             </h3>
-            <p className="text-sm text-text-muted">
-              {loop.agent} • {formatDate(loop.startedAt)}
-            </p>
           </div>
-          <StatusBadge status={getPhaseStatus(loop.phase)} label={getPhaseLabel(loop.phase)} />
+          <p className="text-xs text-text-muted">
+            Build ID: {loop.buildId}
+          </p>
+        </div>
+        
+        <StatusBadge 
+          status={isComplete ? "success" : isBlocked ? "error" : "working"} 
+        />
+      </div>
+
+      {/* Progress */}
+      <div className="mb-4">
+        <div className="flex items-center justify-between text-sm mb-2">
+          <span className="text-text-secondary">Progress</span>
+          <span className="text-text-primary font-medium">
+            {loop.currentStep}/{loop.totalSteps} steps ({progress}%)
+          </span>
+        </div>
+        <ProgressBar 
+          value={progress}
+          size="sm"
+          showLabel={false}
+          variant={isBlocked ? "warning" : "default"}
+        />
+      </div>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 gap-3 mb-3">
+        {/* Agent */}
+        <div className="flex items-center gap-2 text-sm">
+          <User className="w-4 h-4 text-text-muted flex-shrink-0" />
+          <span className="text-text-secondary">Agent:</span>
+          <span className="font-medium text-text-primary truncate">
+            {loop.agent}
+          </span>
         </div>
 
-        {/* Progress */}
-        <div className="space-y-1">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-text-secondary">
-              Step {loop.currentStep} / {loop.totalSteps}
-            </span>
-            <span className="font-medium text-text-primary">{progress}%</span>
-          </div>
-          <SegmentedProgress
-            current={loop.currentStep}
-            total={Math.min(loop.totalSteps, 12)} // Cap visual segments
-            size="sm"
-          />
+        {/* Duration */}
+        <div className="flex items-center gap-2 text-sm">
+          <Clock className="w-4 h-4 text-text-muted flex-shrink-0" />
+          <span className="text-text-secondary">Time:</span>
+          <span className="font-medium text-text-primary">
+            {duration}
+          </span>
         </div>
 
-        {/* Stats */}
-        <div className="flex items-center gap-4 text-sm text-text-muted">
-          <div className="flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5" />
-            <span>{formatDuration(loop.startedAt, isComplete ? loop.lastUpdate : undefined)}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Zap className="w-3.5 h-3.5 text-brand-orange" />
-            <span>{formatNumber(loop.tokensUsed)}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <DollarSign className="w-3.5 h-3.5 text-success" />
-            <span>${loop.cost.toFixed(2)}</span>
-          </div>
+        {/* Tokens */}
+        <div className="flex items-center gap-2 text-sm">
+          <Zap className="w-4 h-4 text-brand-orange flex-shrink-0" />
+          <span className="text-text-secondary">Tokens:</span>
+          <span className="font-medium text-text-primary">
+            {formatNumber(loop.tokensUsed)}
+          </span>
         </div>
 
-        {/* View Details Link */}
+        {/* Cost */}
+        <div className="flex items-center gap-2 text-sm">
+          <DollarSign className="w-4 h-4 text-success flex-shrink-0" />
+          <span className="text-text-secondary">Cost:</span>
+          <span className="font-medium text-text-primary">
+            {formatCost(loop.cost)}
+          </span>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="flex items-center justify-between pt-3 border-t border-white/5">
+        <div className="text-xs text-text-muted">
+          {formatDate(loop.startedAt)} at {formatTime(loop.startedAt)}
+        </div>
         {onClick && (
-          <div className="flex items-center justify-end text-xs text-text-muted group-hover:text-brand-teal transition-colors">
-            <span>View details</span>
-            <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
-          </div>
+          <ChevronRight className="w-4 h-4 text-text-muted group-hover:text-brand-teal transition-colors" />
         )}
       </div>
     </GlassCard>
   );
 }
 
-// Compact variant for lists
-export function LoopCardCompact({
-  loop,
-  onClick,
-  className,
-}: LoopCardProps) {
-  const progress = Math.round((loop.currentStep / loop.totalSteps) * 100);
+/**
+ * Compact variant for list views
+ */
+export function LoopCardCompact({ loop, className, onClick }: LoopCardProps) {
+  const isComplete = loop.phase === "done";
+  const isBlocked = loop.phase === "blocked";
+  const progress = loop.totalSteps > 0 
+    ? Math.round((loop.currentStep / loop.totalSteps) * 100) 
+    : 0;
 
   return (
     <div
+      onClick={onClick}
       className={cn(
-        "flex items-center gap-3 p-3 rounded-lg",
-        "bg-glass-1 border border-iron-800",
+        "flex items-center gap-4 p-3 rounded-lg",
+        "bg-glass-1 border border-white/10",
         "transition-all duration-200",
-        onClick && "cursor-pointer hover:bg-glass-2 hover:border-iron-700",
+        onClick && "cursor-pointer hover:border-brand-teal/50 hover:bg-glass-2",
         className
       )}
-      onClick={onClick}
     >
+      {/* Status Icon */}
+      <div className="flex-shrink-0">
+        {isComplete && (
+          <CheckCircle2 className="w-5 h-5 text-success" />
+        )}
+        {isBlocked && (
+          <XCircle className="w-5 h-5 text-error" />
+        )}
+        {!isComplete && !isBlocked && (
+          <FileCode className="w-5 h-5 text-brand-orange" />
+        )}
+      </div>
+
+      {/* Info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="font-medium text-text-primary truncate">
+          <span className="text-sm font-heading font-semibold text-text-primary truncate">
             {loop.name}
           </span>
-          <StatusBadge status={getPhaseStatus(loop.phase)} label={getPhaseLabel(loop.phase)} className="text-[10px] px-1.5 py-0.5" />
+          <span className="text-xs text-text-muted">
+            @{loop.agent}
+          </span>
         </div>
-        <div className="text-xs text-text-muted mt-0.5">
-          {loop.agent} • {progress}% • ${loop.cost.toFixed(2)}
+        <div className="flex items-center gap-4 mt-1 text-xs text-text-secondary">
+          <span>{progress}% • {loop.currentStep}/{loop.totalSteps}</span>
+          <span>{formatNumber(loop.tokensUsed)} tokens</span>
+          <span>{formatCost(loop.cost)}</span>
         </div>
       </div>
+
+      {/* Arrow */}
       {onClick && (
         <ChevronRight className="w-4 h-4 text-text-muted flex-shrink-0" />
       )}
     </div>
   );
 }
+
+export default LoopCard;

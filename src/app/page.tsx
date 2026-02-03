@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { AppShell } from "@/components/layout/AppShell";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { AgentGrid } from "@/components/cards/AgentGrid";
+import { ClientAgentGrid } from "@/components/cards/ClientAgentGrid";
 import { MetricCard } from "@/components/cards/MetricCard";
 import { ActivityList } from "@/components/data/ActivityList";
 import type { Agent } from "@/types";
@@ -152,7 +152,7 @@ export default async function DashboardPage() {
             {activeAgents} of {totalAgents} online
           </p>
         </div>
-        <AgentGrid agents={agents || []} />
+        <ClientAgentGrid agents={agents || []} />
       </section>
 
       {/* Recent Activity Section */}
