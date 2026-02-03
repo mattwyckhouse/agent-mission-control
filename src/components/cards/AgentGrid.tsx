@@ -34,12 +34,12 @@ export function AgentGrid({
       <div
         className={cn(
           "p-8 text-center rounded-xl",
-          "bg-[rgba(30,33,36,0.4)]",
-          "border border-[rgba(255,255,255,0.05)]",
+          "bg-card/40",
+          "border border-border",
           className
         )}
       >
-        <p className="text-[#8E9296] text-sm">No agents found</p>
+        <p className="text-muted-foreground text-sm">No agents found</p>
       </div>
     );
   }

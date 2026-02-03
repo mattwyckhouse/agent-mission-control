@@ -10,18 +10,38 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Brand colors
+        // Theme-aware semantic colors (use CSS variables)
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        card: {
+          DEFAULT: "var(--card)",
+          foreground: "var(--card-foreground)",
+        },
+        muted: {
+          DEFAULT: "var(--muted)",
+          foreground: "var(--muted-foreground)",
+        },
+        accent: {
+          DEFAULT: "var(--accent)",
+          foreground: "var(--accent-foreground)",
+        },
+        border: "var(--border)",
+        // Glass backgrounds (theme-aware)
+        glass: {
+          1: "var(--glass-1)",
+          2: "var(--glass-2)",
+        },
+        // Brand colors (same in both themes)
         brand: {
           teal: "#1BD0B8",
           orange: "#F27229",
         },
-        // Semantic background colors (theme-aware via CSS variables)
+        // Legacy semantic aliases (keeping for compatibility)
         bg: {
           base: "var(--background)",
           elevated: "var(--card)",
           muted: "var(--muted)",
         },
-        // Semantic text colors (theme-aware via CSS variables)
         text: {
           primary: "var(--foreground)",
           secondary: "var(--muted-foreground)",

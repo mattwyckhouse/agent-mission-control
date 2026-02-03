@@ -118,13 +118,13 @@ export function AgentCard({
       className={cn(
         // Base styles
         "p-4 rounded-xl",
-        "bg-[rgba(30,33,36,0.6)] backdrop-blur-md",
-        "border border-[rgba(255,255,255,0.08)]",
+        "bg-card/60 backdrop-blur-md",
+        "border border-border",
         // Transitions
         "transition-all duration-200 ease-out",
         // Hover effects
         "hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)]",
-        "hover:border-[rgba(27,208,184,0.3)]",
+        "hover:border-brand-teal/30",
         // Cursor
         onClick && "cursor-pointer",
         className
@@ -133,14 +133,14 @@ export function AgentCard({
       {/* Header row: Status dot + Name */}
       <div className="flex items-center gap-2 mb-1">
         <span className={statusDotClasses} aria-hidden="true" />
-        <span className="font-semibold text-base text-[#E8E9EA] truncate">
+        <span className="font-semibold text-base text-foreground truncate">
           {agent.emoji && <span className="mr-1.5">{agent.emoji}</span>}
           {agent.display_name}
         </span>
       </div>
       
       {/* Domain */}
-      <p className="text-xs text-[#8E9296] mb-3 pl-4">
+      <p className="text-xs text-muted-foreground mb-3 pl-4">
         {agent.domain}
       </p>
       
@@ -150,13 +150,13 @@ export function AgentCard({
       </div>
       
       {/* Activity line */}
-      <p className="text-xs text-[#9FA3A8] truncate mb-1">
+      <p className="text-xs text-muted-foreground truncate mb-1">
         {displayActivity}
       </p>
       
       {/* Token count (if provided) */}
       {tokenCount !== undefined && tokenCount > 0 && (
-        <p className="text-xs text-[#6B7075] tabular-nums">
+        <p className="text-xs text-muted-foreground/70 tabular-nums">
           {formatTokenCount(tokenCount)}
         </p>
       )}

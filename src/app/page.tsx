@@ -71,9 +71,9 @@ export default async function DashboardPage() {
           title="Squad Status" 
           subtitle="Error loading dashboard"
         />
-        <div className="p-8 rounded-xl bg-[rgba(222,94,87,0.1)] border border-[rgba(222,94,87,0.3)]">
-          <h2 className="text-lg font-semibold text-[#DE5E57] mb-2">Error loading agents</h2>
-          <pre className="text-sm text-[#9FA3A8] font-mono">{error.message}</pre>
+        <div className="p-8 rounded-xl bg-error/10 border border-error/30">
+          <h2 className="text-lg font-semibold text-error mb-2">Error loading agents</h2>
+          <pre className="text-sm text-muted-foreground font-mono">{error.message}</pre>
         </div>
       </AppShell>
     );
@@ -147,8 +147,8 @@ export default async function DashboardPage() {
       {/* Agent Grid */}
       <section>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-medium text-[#E8E9EA]">Agent Squad</h2>
-          <p className="text-sm text-[#6B7075]">
+          <h2 className="text-lg font-medium text-foreground">Agent Squad</h2>
+          <p className="text-sm text-muted-foreground">
             {activeAgents} of {totalAgents} online
           </p>
         </div>
@@ -157,8 +157,8 @@ export default async function DashboardPage() {
 
       {/* Recent Activity Section */}
       <section className="mt-8">
-        <h2 className="text-lg font-medium text-[#E8E9EA] mb-4">Recent Activity</h2>
-        <div className="p-4 rounded-xl bg-[rgba(30,33,36,0.4)] border border-[rgba(255,255,255,0.05)]">
+        <h2 className="text-lg font-medium text-foreground mb-4">Recent Activity</h2>
+        <div className="p-4 rounded-xl bg-card/40 border border-border">
           <ActivityList 
             activities={activities}
             maxItems={5}

@@ -31,10 +31,11 @@ export function GlassCard({
   onClick,
   "aria-label": ariaLabel,
 }: GlassCardProps) {
+  // Glass styles use CSS variables for theme-awareness
   const glassStyles = {
-    "glass-1": "bg-[rgba(17,18,20,0.24)]",
-    "glass-2": "bg-[rgba(17,18,20,0.56)]",
-    "glass-3": "bg-[rgba(17,18,20,0.80)]",
+    "glass-1": "bg-glass-1",
+    "glass-2": "bg-glass-2", 
+    "glass-3": "bg-card/80",
   };
 
   const paddingStyles = {

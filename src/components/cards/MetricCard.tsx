@@ -80,19 +80,19 @@ export function MetricCard({
     }
   };
 
-  // Get accent color for icon
+  // Get accent color for icon (semantic colors stay hardcoded)
   const getAccentColor = () => {
     switch (variant) {
       case "teal":
-        return "text-[#1BD0B8]";
+        return "text-brand-teal";
       case "orange":
-        return "text-[#F27229]";
+        return "text-brand-orange";
       case "success":
-        return "text-[#67AD5C]";
+        return "text-success";
       case "warning":
-        return "text-[#E6A23C]";
+        return "text-warning";
       default:
-        return "text-[#E8E9EA]";
+        return "text-foreground";
     }
   };
 
@@ -101,8 +101,8 @@ export function MetricCard({
       className={cn(
         // Base styles - glass card
         "p-4 rounded-xl",
-        "bg-[rgba(30,33,36,0.6)] backdrop-blur-md",
-        "border border-[rgba(255,255,255,0.08)]",
+        "bg-card/60 backdrop-blur-md",
+        "border border-border",
         // Centered text
         "text-center",
         // Transitions
@@ -123,7 +123,7 @@ export function MetricCard({
           "font-semibold",
           "text-2xl md:text-[32px]", // 24px mobile, 32px desktop
           "leading-tight",
-          "text-[#E8E9EA]",
+          "text-foreground",
           "tabular-nums", // Ensures numbers align properly
         )}
       >
@@ -138,7 +138,7 @@ export function MetricCard({
           "font-medium",
           "uppercase",
           "tracking-wide", // letter-spacing
-          "text-[#9FA3A8]", // secondary text color
+          "text-muted-foreground", // secondary text color
         )}
       >
         {label}
