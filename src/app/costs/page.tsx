@@ -6,6 +6,7 @@
 
 "use client";
 
+import { useMemo } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { GlassCard } from "@/components/cards/GlassCard";
@@ -13,58 +14,32 @@ import { MetricCard } from "@/components/cards/MetricCard";
 import { CostBarChart, TokenBarChart, type BarChartItem } from "@/components/data/BarChart";
 import { DataTable, type Column } from "@/components/data/DataTable";
 import { SparklineChart } from "@/components/data/SparklineChart";
-import { mockCostData, mockDailyCosts, mockAgents } from "@/lib/mock-data";
-import { DollarSign, Coins, Activity, TrendingUp } from "lucide-react";
+import { getAgentMetrics, getAgentDailyCosts, getAllAgentsSummary } from "@/lib/agent-metrics";
+import { DollarSign, Coins, Activity, TrendingUp, TrendingDown } from "lucide-react";
 
-// Calculate summary stats
-function getCostSummary() {
-  const today = mockCostData;
-  const totalCost = today.reduce((sum, d) => sum + d.cost, 0);
-  const totalTokens = today.reduce((sum, d) => sum + d.totalTokens, 0);
-  const totalRuns = today.reduce((sum, d) => sum + d.runs, 0);
+// All agent IDs we track
+const AGENT_IDS = [
+  "klaus", "iris", "atlas", "oracle", "sentinel", "herald",
+  "forge", "aegis", "codex", "pixel", "pathfinder", "curator", "steward"
+];
 
-  // Week totals from daily costs
-  const weekCost = mockDailyCosts.reduce((sum, d) => sum + d.totalCost, 0);
+const AGENT_NAMES: Record<string, { name: string; emoji: string }> = {
+  klaus: { name: "Klaus", emoji: "🎯" },
+  iris: { name: "Iris", emoji: "📧" },
+  atlas: { name: "Atlas", emoji: "📅" },
+  oracle: { name: "Oracle", emoji: "🔮" },
+  sentinel: { name: "Sentinel", emoji: "📊" },
+  herald: { name: "Herald", emoji: "📢" },
+  forge: { name: "Forge", emoji: "🔨" },
+  aegis: { name: "Aegis", emoji: "🛡️" },
+  codex: { name: "Codex", emoji: "📚" },
+  pixel: { name: "Pixel", emoji: "🎨" },
+  pathfinder: { name: "Pathfinder", emoji: "🧭" },
+  curator: { name: "Curator", emoji: "🎁" },
+  steward: { name: "Steward", emoji: "🏠" },
+};
 
-  // Previous week comparison (mock -15%)
-  const costChange = -15;
-
-  return {
-    todayCost: totalCost,
-    weekCost,
-    totalTokens,
-    totalRuns,
-    costChange,
-  };
-}
-
-// Prepare bar chart data
-function getCostByAgent(): BarChartItem[] {
-  return mockCostData
-    .map((d) => ({
-      label: d.agentName,
-      value: d.cost,
-    }))
-    .sort((a, b) => b.value - a.value)
-    .slice(0, 6); // Top 6
-}
-
-function getTokensByAgent(): BarChartItem[] {
-  return mockCostData
-    .map((d) => ({
-      label: d.agentName,
-      value: d.totalTokens,
-    }))
-    .sort((a, b) => b.value - a.value)
-    .slice(0, 6); // Top 6
-}
-
-// Get sparkline data (daily costs)
-function getDailySparkline(): number[] {
-  return mockDailyCosts.map((d) => d.totalCost);
-}
-
-// Table columns
+// Table row type
 interface CostRow {
   agent: string;
   emoji: string;
@@ -124,32 +99,77 @@ const columns: Column<CostRow>[] = [
   },
 ];
 
-// Prepare table data
-function getTableData(): CostRow[] {
-  return mockCostData.map((d) => {
-    const agent = mockAgents.find((a) => a.id === d.agentId);
-    return {
-      agent: d.agentName,
-      emoji: agent?.emoji ?? "🤖",
-      runs: d.runs,
-      inputTokens: d.inputTokens,
-      outputTokens: d.outputTokens,
-      totalTokens: d.totalTokens,
-      cost: d.cost,
-    };
-  });
-}
-
 export default function CostsPage() {
-  const summary = getCostSummary();
-  const costByAgent = getCostByAgent();
-  const tokensByAgent = getTokensByAgent();
-  const dailyData = getDailySparkline();
-  const tableData = getTableData();
+  // Calculate all metrics using the agent-metrics library
+  const { agentData, summary, costByAgent, tokensByAgent, dailyTotals, tableData } = useMemo(() => {
+    // Get metrics for all agents
+    const agentData = AGENT_IDS.map(id => ({
+      id,
+      ...AGENT_NAMES[id],
+      metrics: getAgentMetrics(id),
+      dailyCosts: getAgentDailyCosts(id),
+    }));
 
-  // Generate date labels for sparkline
-  const dateLabels = mockDailyCosts.map((d) => {
-    const date = new Date(d.date);
+    // Summary stats
+    const summary = getAllAgentsSummary();
+    
+    // Calculate week total from daily data
+    const weekCost = agentData.reduce((sum, agent) => {
+      return sum + agent.dailyCosts.reduce((daySum, day) => daySum + day.value, 0);
+    }, 0);
+
+    // Cost by agent (sorted, top 6)
+    const costByAgent: BarChartItem[] = agentData
+      .map(a => ({ label: a.name, value: a.metrics.cost }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 6);
+
+    // Tokens by agent (sorted, top 6)
+    const tokensByAgent: BarChartItem[] = agentData
+      .map(a => ({ label: a.name, value: a.metrics.totalTokens }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 6);
+
+    // Daily totals for sparkline (aggregate all agents)
+    const dailyTotals: number[] = [];
+    for (let i = 0; i < 7; i++) {
+      const dayTotal = agentData.reduce((sum, agent) => {
+        return sum + (agent.dailyCosts[i]?.value || 0);
+      }, 0);
+      dailyTotals.push(Math.round(dayTotal * 100) / 100);
+    }
+
+    // Table data
+    const tableData: CostRow[] = agentData.map(a => ({
+      agent: a.name,
+      emoji: a.emoji,
+      runs: a.metrics.runs,
+      inputTokens: a.metrics.inputTokens,
+      outputTokens: a.metrics.outputTokens,
+      totalTokens: a.metrics.totalTokens,
+      cost: a.metrics.cost,
+    }));
+
+    return {
+      agentData,
+      summary: { ...summary, weekCost },
+      costByAgent,
+      tokensByAgent,
+      dailyTotals,
+      tableData,
+    };
+  }, []);
+
+  // Calculate trend
+  const costTrend = dailyTotals.length >= 2 
+    ? ((dailyTotals[6] - dailyTotals[5]) / dailyTotals[5] * 100) 
+    : 0;
+  const costTrendDirection = costTrend > 2 ? "up" : costTrend < -2 ? "down" : "neutral";
+
+  // Generate date labels
+  const dateLabels = Array.from({ length: 7 }, (_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() - (6 - i));
     return date.toLocaleDateString("en-US", { weekday: "short" });
   });
 
@@ -163,18 +183,20 @@ export default function CostsPage() {
       {/* Summary Metrics */}
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
         <MetricCard
-          value={`$${summary.todayCost.toFixed(2)}`}
+          value={`$${summary.totalCost.toFixed(2)}`}
           label="Today"
           trend={{
-            direction: summary.costChange < 0 ? "down" : "up",
-            value: `${Math.abs(summary.costChange)}% vs yesterday`,
+            direction: costTrendDirection === "down" ? "down" : "up",
+            value: `${Math.abs(costTrend).toFixed(0)}% vs yesterday`,
           }}
           icon={<DollarSign className="h-5 w-5" />}
+          variant={costTrendDirection === "down" ? "success" : costTrendDirection === "up" ? "warning" : "default"}
         />
         <MetricCard
           value={`$${summary.weekCost.toFixed(2)}`}
           label="This Week"
-          icon={<TrendingUp className="h-5 w-5" />}
+          icon={costTrend > 0 ? <TrendingUp className="h-5 w-5" /> : <TrendingDown className="h-5 w-5" />}
+          variant="teal"
         />
         <MetricCard
           value={summary.totalTokens.toLocaleString()}
@@ -185,6 +207,7 @@ export default function CostsPage() {
           value={summary.totalRuns.toString()}
           label="Runs Today"
           icon={<Activity className="h-5 w-5" />}
+          variant="orange"
         />
       </div>
 
@@ -192,7 +215,7 @@ export default function CostsPage() {
       <div className="mb-6 grid gap-4 lg:grid-cols-2">
         {/* Cost by Agent */}
         <GlassCard>
-          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-text-secondary">
+          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
             Cost by Agent (Today)
           </h3>
           <CostBarChart data={costByAgent} />
@@ -200,7 +223,7 @@ export default function CostsPage() {
 
         {/* Tokens by Agent */}
         <GlassCard>
-          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-text-secondary">
+          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
             Tokens by Agent (Today)
           </h3>
           <TokenBarChart data={tokensByAgent} />
@@ -209,26 +232,33 @@ export default function CostsPage() {
 
       {/* Weekly Trend */}
       <GlassCard className="mb-6">
-        <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-text-secondary">
+        <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
           Daily Cost Trend (Last 7 Days)
         </h3>
         <SparklineChart
-          data={dailyData}
-          height={60}
+          data={dailyTotals}
+          height={80}
           showArea={true}
           showMinMax={true}
-          labels={[dateLabels[0], dateLabels[dateLabels.length - 1]]}
+          showDots={true}
+          labels={[dateLabels[0], dateLabels[3], dateLabels[6]]}
         />
-        <div className="mt-2 flex justify-between text-xs text-text-muted">
-          <span>Min: ${Math.min(...dailyData).toFixed(2)}</span>
-          <span>Avg: ${(dailyData.reduce((a, b) => a + b, 0) / dailyData.length).toFixed(2)}</span>
-          <span>Max: ${Math.max(...dailyData).toFixed(2)}</span>
+        <div className="mt-3 flex justify-between text-xs text-muted-foreground">
+          <span className="flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-error" />
+            Min: ${Math.min(...dailyTotals).toFixed(2)}
+          </span>
+          <span>Avg: ${(dailyTotals.reduce((a, b) => a + b, 0) / dailyTotals.length).toFixed(2)}</span>
+          <span className="flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-success" />
+            Max: ${Math.max(...dailyTotals).toFixed(2)}
+          </span>
         </div>
       </GlassCard>
 
       {/* Detailed Table */}
       <GlassCard>
-        <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-text-secondary">
+        <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
           Detailed Breakdown
         </h3>
         <DataTable

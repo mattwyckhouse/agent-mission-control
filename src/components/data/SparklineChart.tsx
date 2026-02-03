@@ -129,7 +129,7 @@ export function SparklineChart({
 
       {/* Labels */}
       {labels && labels.length > 0 && (
-        <div className="mt-1 flex justify-between text-[10px] text-text-muted">
+        <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
           {labels.map((label, i) => (
             <span key={i}>{label}</span>
           ))}
