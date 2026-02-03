@@ -1,7 +1,8 @@
 import Link from "next/link"
 import { ArrowLeft, ClipboardList, MessageSquare, Square, RotateCcw, Zap, DollarSign, Activity } from "lucide-react"
-import { mockAgents, mockActivity, mockCostData } from "@/lib/mock-data"
+import { createClient } from "@/lib/supabase/server"
 import { mapAgentStatusToUI } from "@/types"
+import type { Agent } from "@/types"
 import { GlassCard } from "@/components/cards/GlassCard"
 import { StatusBadge } from "@/components/ui/StatusBadge"
 import { Button } from "@/components/ui/Button"
@@ -14,9 +15,16 @@ interface AgentDetailPageProps {
 
 export default async function AgentDetailPage({ params }: AgentDetailPageProps) {
   const { id } = await params
-  const agent = mockAgents.find((a) => a.id === id)
+  const supabase = await createClient()
+  
+  // Fetch agent from Supabase
+  const { data: agent, error } = await supabase
+    .from("agents")
+    .select("*")
+    .eq("id", id)
+    .single() as { data: Agent | null; error: any }
 
-  if (!agent) {
+  if (error || !agent) {
     return (
       <div className="min-h-screen bg-bg-base flex items-center justify-center">
         <GlassCard variant="glass-2" className="p-8 text-center">
@@ -35,25 +43,30 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
 
   const uiStatus = mapAgentStatusToUI(agent.status)
   
-  // Get agent's activities
-  const agentActivities = mockActivity
-    .filter((a) => a.agentId === agent.id)
-    .slice(0, 10)
+  // Fetch agent's activities from Supabase
+  const { data: agentActivities } = await supabase
+    .from("activities")
+    .select("*")
+    .eq("agent_id", agent.id)
+    .order("created_at", { ascending: false })
+    .limit(10) as { data: any[] | null }
   
   // Convert to Timeline format
-  const timelineItems: TimelineItem[] = agentActivities.map((activity) => ({
+  const timelineItems: TimelineItem[] = (agentActivities || []).map((activity) => ({
     id: activity.id,
-    timestamp: new Date(activity.timestamp).toLocaleTimeString("en-US", {
+    timestamp: new Date(activity.created_at).toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
     }),
-    description: activity.message,
-    status: activity.type === "success" ? "done" : activity.type === "error" ? "error" : "pending",
+    description: activity.title || activity.description || "Activity",
+    status: activity.activity_type === "task_completed" ? "done" 
+      : activity.activity_type === "error" ? "error" 
+      : "pending",
   }))
 
-  // Get agent cost data
-  const agentCost = mockCostData.find((c) => c.agentId === agent.id)
+  // Mock cost data for now - TODO: implement real cost tracking
+  const agentCost = { runs: 0, totalTokens: 0, cost: 0 }
   
   // Mock performance stats
   const performanceStats = {
