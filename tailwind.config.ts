@@ -15,6 +15,18 @@ const config: Config = {
           teal: "#1BD0B8",
           orange: "#F27229",
         },
+        // Semantic background colors (theme-aware via CSS variables)
+        bg: {
+          base: "var(--background)",
+          elevated: "var(--card)",
+          muted: "var(--muted)",
+        },
+        // Semantic text colors (theme-aware via CSS variables)
+        text: {
+          primary: "var(--foreground)",
+          secondary: "var(--muted-foreground)",
+          muted: "var(--muted-foreground)",
+        },
         // Iron scale (dark theme)
         iron: {
           25: "#FAFAFB",

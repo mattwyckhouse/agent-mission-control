@@ -42,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${instrumentSans.variable} font-body antialiased bg-[#111214] text-[#FAFAFB] min-h-screen`}
+        className={`${inter.variable} ${instrumentSans.variable} font-body antialiased bg-bg-base text-text-primary min-h-screen`}
       >
         {/* Skip to content link for keyboard/screen reader users */}
         <a href="#main-content" className="skip-to-content">
