@@ -8,16 +8,49 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added — Phase 3: Agent Actions & Task Management
 
-- **Agent control panel** — Start/stop/trigger actions from agent detail page (1f3e588)
-- **ConfirmDialog component** — Reusable confirmation modal with customizable actions (4c258c2)
-- **ActionToast component** — Success/error feedback for agent actions (4c258c2)
-- **BulkActions component** — Multi-select operations for agents (7a26333)
-- **Task API routes** — CRUD endpoints for task management (e8c515c)
-- **TaskForm component** — Create and edit tasks with validation (e8c515c)
-- **TaskEditModal component** — Modal wrapper for task editing (9c3a39e)
-- **AssigneeSelect component** — Agent assignment dropdown with search (7c9c9aa)
-- **Task status transitions** — State machine for task workflow (6042106)
-- **Agent actions API tests** — Full coverage for action endpoints (37b25f1)
+#### Agent Controls (Steps 1-10)
+- **Action types system** — Type-safe action definitions (1f3e588)
+- **Agent control panel** — Start/stop/restart/message from agent detail (1f3e588)
+- **ConfirmDialog component** — Accessible confirmation modal (4c258c2)
+- **ActionToast component** — Success/error feedback (4c258c2)
+- **BulkActions component** — Multi-agent operations (7a26333)
+- **Agent actions API** — POST `/api/agents/[id]/actions` with history (37b25f1)
+
+#### Task Management (Steps 11-20)
+- **Task API routes** — Full CRUD with filtering (e8c515c)
+- **TaskForm component** — Create/edit with validation (e8c515c)
+- **TaskEditModal component** — Modal wrapper (9c3a39e)
+- **AssigneeSelect component** — Agent assignment dropdown (7c9c9aa)
+- **Task status transitions** — State machine with effects (6042106)
+- **DraggableTaskCard** — HTML5 drag support (09083b3)
+- **DroppableColumn** — Drop zone with validation (09083b3)
+- **TaskKanban** — Complete Kanban board (09083b3)
+
+#### Cost Analytics (Steps 21-30)
+- **Cost API route** — GET `/api/costs` with aggregations (475f90d)
+- **DateRangeFilter** — Presets + custom date selection (475f90d)
+- **CostBudget component** — Budget tracking with alerts (70ad7b8)
+- **AgentCostBreakdown** — Per-agent cost visualization (70ad7b8)
+- **useCostsData hook** — Data fetching with filters (84f591a)
+
+#### Notifications (Steps 26-27)
+- **NotificationCenter** — Bell dropdown with list (e621cca)
+- **useNotifications hook** — State management + persistence (e621cca)
+
+#### Search & Settings (Steps 31-40)
+- **CommandPalette** — ⌘K global search (75c1a08)
+- **SettingsPanel** — Theme, notifications, budgets (351d1df)
+- **Settings page** — Persisted to localStorage (351d1df)
+- **useKeyboardShortcuts** — Global shortcut handler (7b4a871)
+- **KeyboardShortcutsHelp** — ? modal (7b4a871)
+
+#### Polish & Testing (Steps 41-48)
+- **LoadingState** — Consistent loading indicators (7b4a871)
+- **EmptyState** — Empty content placeholders (7b4a871)
+- **ErrorBoundary** — Error catching with retry (956536f)
+- **Tooltip** — Hover tooltips (956536f)
+- **Formatters** — Date, number, text utilities (f3437a9)
+- **222 unit tests** — Full coverage
 
 ### Added — Phase 2: Real-Time & Sync
 
