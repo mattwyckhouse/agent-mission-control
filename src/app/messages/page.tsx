@@ -1,7 +1,7 @@
 /**
  * Messages Page — Inter-Agent Communication Log
  * 
- * Robust message viewer with DataTable, search, filtering, and multiple views.
+ * Robust message viewer with DataTable, search, filtering, server-side pagination.
  */
 
 "use client";
@@ -27,25 +27,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   RefreshCw,
   MessageSquare,
   ArrowRight,
   Search,
-  Filter,
   Clock,
-  MoreHorizontal,
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
   Users,
   Activity,
   X,
@@ -72,6 +68,12 @@ interface Filters {
   toAgent: string;
   messageType: string;
   dateRange: string;
+}
+
+interface PaginationState {
+  page: number;
+  pageSize: number;
+  totalCount: number;
 }
 
 // Agent data
@@ -105,11 +107,12 @@ const DATE_RANGES = [
   { value: "month", label: "Last 30 Days" },
 ];
 
+const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
+
 // Helpers
 function getAgentDisplay(agentId: string | null, isHuman: boolean, metadata?: Record<string, unknown>) {
   if (isHuman) return { name: "Matt", emoji: "👤" };
   
-  // Check metadata for original input
   const input = metadata?.from_input || metadata?.to_input;
   if (typeof input === "string") {
     const agent = AGENTS.find(a => a.id === input.toLowerCase());
@@ -118,7 +121,6 @@ function getAgentDisplay(agentId: string | null, isHuman: boolean, metadata?: Re
   
   if (!agentId) return { name: "Unknown", emoji: "❓" };
   
-  // Try to match by UUID or name
   const agent = AGENTS.find(a => a.id === agentId);
   return agent || { name: agentId.slice(0, 8), emoji: "🤖" };
 }
@@ -229,6 +231,118 @@ function ExpandedMessageRow({ message }: { message: Message }) {
   );
 }
 
+interface PaginationControlsProps {
+  pagination: PaginationState;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
+  loading?: boolean;
+}
+
+function PaginationControls({ pagination, onPageChange, onPageSizeChange, loading }: PaginationControlsProps) {
+  const { page, pageSize, totalCount } = pagination;
+  const totalPages = Math.ceil(totalCount / pageSize);
+  const startItem = totalCount === 0 ? 0 : (page - 1) * pageSize + 1;
+  const endItem = Math.min(page * pageSize, totalCount);
+
+  return (
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-4 py-3 border-t border-border">
+      {/* Page size selector */}
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <span>Rows per page:</span>
+        <Select
+          value={pageSize.toString()}
+          onValueChange={(v) => onPageSizeChange(Number(v))}
+        >
+          <SelectTrigger className="w-[70px] h-8">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {PAGE_SIZE_OPTIONS.map(size => (
+              <SelectItem key={size} value={size.toString()}>
+                {size}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Page info */}
+      <div className="text-sm text-muted-foreground">
+        {totalCount === 0 ? (
+          "No messages"
+        ) : (
+          <>
+            Showing <span className="font-medium text-foreground">{startItem}</span>
+            {" - "}
+            <span className="font-medium text-foreground">{endItem}</span>
+            {" of "}
+            <span className="font-medium text-foreground">{totalCount}</span>
+          </>
+        )}
+      </div>
+
+      {/* Page navigation */}
+      <div className="flex items-center gap-1">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onPageChange(1)}
+          disabled={page <= 1 || loading}
+          className="h-8 w-8 p-0"
+        >
+          <ChevronsLeft className="w-4 h-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onPageChange(page - 1)}
+          disabled={page <= 1 || loading}
+          className="h-8 w-8 p-0"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </Button>
+        
+        <div className="flex items-center gap-1 px-2">
+          <span className="text-sm text-muted-foreground">Page</span>
+          <Input
+            type="number"
+            min={1}
+            max={totalPages || 1}
+            value={page}
+            onChange={(e) => {
+              const newPage = parseInt(e.target.value);
+              if (newPage >= 1 && newPage <= totalPages) {
+                onPageChange(newPage);
+              }
+            }}
+            className="w-14 h-8 text-center"
+          />
+          <span className="text-sm text-muted-foreground">of {totalPages || 1}</span>
+        </div>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onPageChange(page + 1)}
+          disabled={page >= totalPages || loading}
+          className="h-8 w-8 p-0"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onPageChange(totalPages)}
+          disabled={page >= totalPages || loading}
+          className="h-8 w-8 p-0"
+        >
+          <ChevronsRight className="w-4 h-4" />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 // Main page
 export default function MessagesPage() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -237,6 +351,13 @@ export default function MessagesPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [view, setView] = useState<"table" | "timeline">("table");
+  
+  // Pagination
+  const [pagination, setPagination] = useState<PaginationState>({
+    page: 1,
+    pageSize: 25,
+    totalCount: 0,
+  });
   
   // Filters
   const [filters, setFilters] = useState<Filters>({
@@ -247,16 +368,25 @@ export default function MessagesPage() {
     dateRange: "all",
   });
 
-  // Fetch messages
-  const fetchMessages = useCallback(async () => {
+  // Fetch messages with server-side pagination
+  const fetchMessages = useCallback(async (pageOverride?: number) => {
     try {
-      const params = new URLSearchParams({ limit: "200" });
+      const currentPage = pageOverride ?? pagination.page;
+      const offset = (currentPage - 1) * pagination.pageSize;
+      
+      const params = new URLSearchParams({
+        limit: pagination.pageSize.toString(),
+        offset: offset.toString(),
+      });
       
       if (filters.fromAgent !== "all") {
         params.set("from_agent", filters.fromAgent);
       }
       if (filters.toAgent !== "all") {
         params.set("to_agent", filters.toAgent);
+      }
+      if (filters.messageType !== "all") {
+        params.set("message_type", filters.messageType);
       }
       
       const since = getDateRangeFilter(filters.dateRange);
@@ -267,7 +397,13 @@ export default function MessagesPage() {
       const res = await fetch(`/api/messages?${params}`);
       if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
       const json = await res.json();
+      
       setMessages(json.messages || []);
+      setPagination(prev => ({
+        ...prev,
+        page: currentPage,
+        totalCount: json.count || 0,
+      }));
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load messages");
@@ -275,17 +411,32 @@ export default function MessagesPage() {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [filters.fromAgent, filters.toAgent, filters.dateRange]);
+  }, [pagination.page, pagination.pageSize, filters.fromAgent, filters.toAgent, filters.messageType, filters.dateRange]);
 
+  // Initial fetch and auto-refresh
   useEffect(() => {
     fetchMessages();
-    const interval = setInterval(fetchMessages, 30000);
+    const interval = setInterval(() => fetchMessages(), 30000);
     return () => clearInterval(interval);
   }, [fetchMessages]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setPagination(prev => ({ ...prev, page: 1 }));
+  }, [filters.fromAgent, filters.toAgent, filters.messageType, filters.dateRange]);
 
   const handleRefresh = () => {
     setRefreshing(true);
     fetchMessages();
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setLoading(true);
+    fetchMessages(newPage);
+  };
+
+  const handlePageSizeChange = (newSize: number) => {
+    setPagination(prev => ({ ...prev, pageSize: newSize, page: 1 }));
   };
 
   const toggleRow = (id: string) => {
@@ -313,28 +464,20 @@ export default function MessagesPage() {
     filters.messageType !== "all" || 
     filters.dateRange !== "all";
 
-  // Apply client-side filters (search and message type)
+  // Client-side search filter (search is still client-side for responsiveness)
   const filteredMessages = useMemo(() => {
+    if (!filters.search) return messages;
+    
+    const searchLower = filters.search.toLowerCase();
     return messages.filter(m => {
-      // Search filter
-      if (filters.search) {
-        const searchLower = filters.search.toLowerCase();
-        const contentMatch = m.content.toLowerCase().includes(searchLower);
-        const fromMatch = getAgentDisplay(m.from_agent_id, m.from_human, m.metadata).name.toLowerCase().includes(searchLower);
-        const toMatch = getAgentDisplay(m.to_agent_id, m.to_human, m.metadata).name.toLowerCase().includes(searchLower);
-        if (!contentMatch && !fromMatch && !toMatch) return false;
-      }
-      
-      // Message type filter
-      if (filters.messageType !== "all" && m.message_type !== filters.messageType) {
-        return false;
-      }
-      
-      return true;
+      const contentMatch = m.content.toLowerCase().includes(searchLower);
+      const fromMatch = getAgentDisplay(m.from_agent_id, m.from_human, m.metadata).name.toLowerCase().includes(searchLower);
+      const toMatch = getAgentDisplay(m.to_agent_id, m.to_human, m.metadata).name.toLowerCase().includes(searchLower);
+      return contentMatch || fromMatch || toMatch;
     });
-  }, [messages, filters.search, filters.messageType]);
+  }, [messages, filters.search]);
 
-  // Stats
+  // Stats (based on current page for now)
   const stats = useMemo(() => {
     const uniqueSenders = new Set(messages.map(m => m.from_agent_id || "human").filter(Boolean));
     const uniqueReceivers = new Set(messages.map(m => m.to_agent_id || "human").filter(Boolean));
@@ -342,12 +485,12 @@ export default function MessagesPage() {
     const escalations = messages.filter(m => m.message_type === "escalation").length;
     
     return {
-      total: messages.length,
+      total: pagination.totalCount,
       participants: uniqueSenders.size + uniqueReceivers.size,
       taskRelated,
       escalations,
     };
-  }, [messages]);
+  }, [messages, pagination.totalCount]);
 
   // Group by date for timeline view
   const groupedMessages = useMemo(() => {
@@ -364,7 +507,7 @@ export default function MessagesPage() {
     <AppShell>
       <PageHeader
         title="Agent Messages"
-        subtitle={`${filteredMessages.length} messages${hasActiveFilters ? " (filtered)" : ""}`}
+        subtitle={`${pagination.totalCount} total messages${hasActiveFilters ? " (filtered)" : ""}`}
         actions={
           <div className="flex items-center gap-2">
             <Button
@@ -490,7 +633,7 @@ export default function MessagesPage() {
       </Tabs>
 
       {/* Content */}
-      {loading ? (
+      {loading && messages.length === 0 ? (
         <GlassCard className="animate-pulse">
           <div className="h-64 bg-muted rounded-lg" />
         </GlassCard>
@@ -521,68 +664,78 @@ export default function MessagesPage() {
       ) : view === "table" ? (
         /* Table View */
         <GlassCard className="p-0 overflow-hidden">
-          <ScrollArea className="h-[600px]">
-            <Table>
-              <TableHeader className="sticky top-0 bg-card z-10">
-                <TableRow>
-                  <TableHead className="w-[40px]"></TableHead>
-                  <TableHead>From</TableHead>
-                  <TableHead>To</TableHead>
-                  <TableHead className="max-w-[400px]">Message</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Time</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredMessages.map((message) => (
-                  <>
-                    <TableRow
-                      key={message.id}
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => toggleRow(message.id)}
-                    >
-                      <TableCell>
-                        {expandedRows.has(message.id) ? (
-                          <ChevronUp className="w-4 h-4 text-muted-foreground" />
-                        ) : (
-                          <ChevronDown className="w-4 h-4 text-muted-foreground" />
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <AgentBadge 
-                          agentId={message.from_agent_id} 
-                          isHuman={message.from_human}
-                          metadata={message.metadata}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <AgentBadge 
-                          agentId={message.to_agent_id} 
-                          isHuman={message.to_human}
-                          metadata={message.metadata}
-                        />
-                      </TableCell>
-                      <TableCell className="max-w-[400px]">
-                        <p className="truncate text-sm text-foreground">
-                          {message.content.slice(0, 100)}
-                          {message.content.length > 100 && "..."}
-                        </p>
-                      </TableCell>
-                      <TableCell>
-                        <MessageTypeTag type={message.message_type} />
-                      </TableCell>
-                      <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
-                        {formatDateTime(message.created_at)}
-                      </TableCell>
-                    </TableRow>
-                    {expandedRows.has(message.id) && (
-                      <ExpandedMessageRow key={`${message.id}-expanded`} message={message} />
-                    )}
-                  </>
-                ))}
-              </TableBody>
-            </Table>
-          </ScrollArea>
+          <div className={loading ? "opacity-50 pointer-events-none" : ""}>
+            <ScrollArea className="h-[500px]">
+              <Table>
+                <TableHeader className="sticky top-0 bg-card z-10">
+                  <TableRow>
+                    <TableHead className="w-[40px]"></TableHead>
+                    <TableHead>From</TableHead>
+                    <TableHead>To</TableHead>
+                    <TableHead className="max-w-[400px]">Message</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Time</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredMessages.map((message) => (
+                    <>
+                      <TableRow
+                        key={message.id}
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => toggleRow(message.id)}
+                      >
+                        <TableCell>
+                          {expandedRows.has(message.id) ? (
+                            <ChevronUp className="w-4 h-4 text-muted-foreground" />
+                          ) : (
+                            <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <AgentBadge 
+                            agentId={message.from_agent_id} 
+                            isHuman={message.from_human}
+                            metadata={message.metadata}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <AgentBadge 
+                            agentId={message.to_agent_id} 
+                            isHuman={message.to_human}
+                            metadata={message.metadata}
+                          />
+                        </TableCell>
+                        <TableCell className="max-w-[400px]">
+                          <p className="truncate text-sm text-foreground">
+                            {message.content.slice(0, 100)}
+                            {message.content.length > 100 && "..."}
+                          </p>
+                        </TableCell>
+                        <TableCell>
+                          <MessageTypeTag type={message.message_type} />
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
+                          {formatDateTime(message.created_at)}
+                        </TableCell>
+                      </TableRow>
+                      {expandedRows.has(message.id) && (
+                        <ExpandedMessageRow key={`${message.id}-expanded`} message={message} />
+                      )}
+                    </>
+                  ))}
+                </TableBody>
+              </Table>
+            </ScrollArea>
+          </div>
+          
+          {/* Pagination Controls */}
+          <PaginationControls
+            pagination={pagination}
+            onPageChange={handlePageChange}
+            onPageSizeChange={handlePageSizeChange}
+            loading={loading}
+          />
         </GlassCard>
       ) : (
         /* Timeline View */
@@ -641,6 +794,16 @@ export default function MessagesPage() {
               </GlassCard>
             </div>
           ))}
+          
+          {/* Pagination for Timeline too */}
+          <GlassCard className="p-0">
+            <PaginationControls
+              pagination={pagination}
+              onPageChange={handlePageChange}
+              onPageSizeChange={handlePageSizeChange}
+              loading={loading}
+            />
+          </GlassCard>
         </div>
       )}
     </AppShell>

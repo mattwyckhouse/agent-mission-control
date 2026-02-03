@@ -126,6 +126,7 @@ export async function GET(request: NextRequest) {
     const from_agent_param = searchParams.get("from_agent");
     const to_agent_param = searchParams.get("to_agent");
     const agent_param = searchParams.get("agent"); // Either from or to
+    const message_type = searchParams.get("message_type");
     const task_id = searchParams.get("task_id");
     const thread_id = searchParams.get("thread_id");
     const since = searchParams.get("since"); // ISO timestamp
@@ -154,6 +155,10 @@ export async function GET(request: NextRequest) {
     
     if (agent_param && agent) {
       query = query.or(`from_agent_id.eq.${agent},to_agent_id.eq.${agent}`);
+    }
+    
+    if (message_type) {
+      query = query.eq("message_type", message_type);
     }
     
     if (task_id) {
