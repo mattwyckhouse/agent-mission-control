@@ -193,7 +193,8 @@ export function parsePendingTasksMd(content: string): OpenClawTask[] {
   const tasks: OpenClawTask[] = [];
 
   // Extract "In Progress" section
-  const inProgressMatch = content.match(/## 🔄 In Progress\n([\s\S]*?)(?=## |$)/);
+  // Use (?=\n## [^#]|$) to avoid matching ### headers
+  const inProgressMatch = content.match(/## 🔄 In Progress\n([\s\S]*?)(?=\n## [^#]|$)/);
   if (inProgressMatch) {
     const items = extractPendingItems(inProgressMatch[1]);
     for (const item of items) {
@@ -203,7 +204,7 @@ export function parsePendingTasksMd(content: string): OpenClawTask[] {
   }
 
   // Extract "Completed Today" section
-  const completedMatch = content.match(/## ✅ Completed Today\n([\s\S]*?)(?=## |$)/);
+  const completedMatch = content.match(/## ✅ Completed Today\n([\s\S]*?)(?=\n## [^#]|$)/);
   if (completedMatch) {
     const items = extractPendingItems(completedMatch[1]);
     for (const item of items) {
