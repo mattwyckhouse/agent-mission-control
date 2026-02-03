@@ -90,16 +90,18 @@ export function Header() {
           <ThemeToggle />
           
           {/* Settings */}
-          <button
+          <Link
+            href="/settings"
             className={cn(
               "w-9 h-9 flex items-center justify-center rounded-lg",
               "text-[var(--color-iron-400)] hover:text-[var(--color-iron-25)]",
-              "hover:bg-white/5 transition-colors"
+              "hover:bg-white/5 transition-colors",
+              pathname === "/settings" && "text-[var(--color-iron-25)] bg-white/5"
             )}
             aria-label="Settings"
           >
             <Settings className="w-5 h-5" />
-          </button>
+          </Link>
         </div>
       </div>
     </header>
