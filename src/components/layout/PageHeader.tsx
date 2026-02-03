@@ -28,18 +28,18 @@ export function PageHeader({
   return (
     <div className={cn("flex items-start justify-between gap-4 mb-6", className)}>
       <div className="space-y-1">
-        <h1 className="text-2xl md:text-3xl font-semibold text-[var(--color-iron-25)] tracking-tight">
+        <h1 className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight">
           {title}
         </h1>
         {subtitle && (
-          <p className="text-sm text-[var(--color-iron-400)]">{subtitle}</p>
+          <p className="text-sm text-muted-foreground">{subtitle}</p>
         )}
       </div>
       
       <div className="flex items-center gap-4">
         {timestamp && (
           <div className="hidden sm:block text-right">
-            <p className="text-sm text-[var(--color-iron-400)]">{timestamp}</p>
+            <p className="text-sm text-muted-foreground">{timestamp}</p>
           </div>
         )}
         {actions && (

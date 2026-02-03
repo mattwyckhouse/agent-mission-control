@@ -11,19 +11,19 @@ interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles = {
   default: cn(
-    "text-[var(--color-iron-400)]",
-    "hover:text-[var(--color-iron-25)] hover:bg-white/5",
-    "active:bg-white/10"
+    "text-muted-foreground",
+    "hover:text-foreground hover:bg-accent",
+    "active:bg-accent/80"
   ),
   ghost: cn(
-    "text-[var(--color-iron-500)]",
-    "hover:text-[var(--color-iron-25)]",
-    "active:text-[var(--color-iron-100)]"
+    "text-muted-foreground",
+    "hover:text-foreground",
+    "active:text-foreground/80"
   ),
   danger: cn(
-    "text-[var(--color-iron-400)]",
-    "hover:text-[var(--color-error)] hover:bg-[rgba(222,94,87,0.1)]",
-    "active:bg-[rgba(222,94,87,0.15)]"
+    "text-muted-foreground",
+    "hover:text-error hover:bg-error/10",
+    "active:bg-error/15"
   ),
 };
 
@@ -69,7 +69,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
           "inline-flex items-center justify-center",
           "rounded-lg",
           "transition-colors duration-150",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-iron-950)]",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           
           // Variant and size
           variantStyles[variant],
@@ -77,7 +77,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
           iconSizeStyles[size],
           
           // Active state
-          active && "text-[var(--color-brand-teal)]",
+          active && "text-brand-teal",
           
           // Disabled state
           disabled && "opacity-50 cursor-not-allowed pointer-events-none",

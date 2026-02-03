@@ -36,7 +36,7 @@ export function Skeleton({
   return (
     <div
       className={cn(
-        "bg-white/5 rounded-md",
+        "bg-muted rounded-md",
         animate && "animate-pulse",
         circle && "rounded-full",
         // Allow Tailwind width/height classes
@@ -103,7 +103,7 @@ export function SkeletonCard({
     <div
       className={cn(
         "p-4 rounded-xl",
-        "bg-[var(--color-iron-800)]/50 border border-white/10",
+        "bg-card/50 border border-border",
         className
       )}
       aria-hidden="true"
@@ -129,7 +129,7 @@ export function SkeletonAgentCard({ className }: { className?: string }) {
     <div
       className={cn(
         "p-4 rounded-xl",
-        "bg-[var(--color-iron-800)]/50 border border-white/10",
+        "bg-card/50 border border-border",
         "h-[120px]",
         className
       )}
@@ -170,7 +170,7 @@ export function SkeletonMetricCard({ className }: { className?: string }) {
     <div
       className={cn(
         "p-4 rounded-xl",
-        "bg-[var(--color-iron-800)]/50 border border-white/10",
+        "bg-card/50 border border-border",
         "h-[100px]",
         className
       )}
@@ -208,13 +208,13 @@ export function SkeletonTable({
     <div
       className={cn(
         "rounded-xl overflow-hidden",
-        "bg-[var(--color-iron-800)]/30 border border-white/10",
+        "bg-card/30 border border-border",
         className
       )}
       aria-hidden="true"
     >
       {/* Header */}
-      <div className="flex gap-4 p-4 border-b border-white/10 bg-white/5">
+      <div className="flex gap-4 p-4 border-b border-border bg-muted/50">
         {Array.from({ length: columns }).map((_, i) => (
           <Skeleton
             key={`header-${i}`}
@@ -231,7 +231,7 @@ export function SkeletonTable({
       {Array.from({ length: rows }).map((_, rowIdx) => (
         <div
           key={`row-${rowIdx}`}
-          className="flex gap-4 p-4 border-b border-white/5 last:border-b-0"
+          className="flex gap-4 p-4 border-b border-border/50 last:border-b-0"
         >
           {Array.from({ length: columns }).map((_, colIdx) => (
             <Skeleton

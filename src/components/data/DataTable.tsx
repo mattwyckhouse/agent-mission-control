@@ -122,21 +122,21 @@ export function DataTable<T extends object>({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-xl border border-iron-800 bg-glass-1",
+        "overflow-hidden rounded-xl border border-border bg-glass-1",
         className
       )}
     >
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-iron-800/50">
+            <tr className="bg-muted/50">
               {columns.map((column) => (
                 <th
                   key={String(column.key)}
                   className={cn(
-                    "px-4 py-3 text-xs font-semibold uppercase tracking-wide text-text-secondary",
-                    stickyHeader && "sticky top-0 bg-iron-800/90 backdrop-blur-sm",
-                    column.sortable && "cursor-pointer select-none hover:text-text-primary",
+                    "px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground",
+                    stickyHeader && "sticky top-0 bg-muted/90 backdrop-blur-sm",
+                    column.sortable && "cursor-pointer select-none hover:text-foreground",
                     column.align === "center" && "text-center",
                     column.align === "right" && "text-right"
                   )}
@@ -162,7 +162,7 @@ export function DataTable<T extends object>({
               <tr>
                 <td
                   colSpan={columns.length}
-                  className="px-4 py-8 text-center text-sm text-text-muted"
+                  className="px-4 py-8 text-center text-sm text-muted-foreground"
                 >
                   {emptyMessage}
                 </td>
@@ -172,7 +172,7 @@ export function DataTable<T extends object>({
                 <tr
                   key={getRowKey(row, rowIndex)}
                   className={cn(
-                    "border-t border-iron-800 transition-colors",
+                    "border-t border-border transition-colors",
                     onRowClick && "cursor-pointer hover:bg-glass-2"
                   )}
                   onClick={() => onRowClick?.(row, rowIndex)}
@@ -181,7 +181,7 @@ export function DataTable<T extends object>({
                     <td
                       key={String(column.key)}
                       className={cn(
-                        "px-4 py-3 text-sm text-text-primary",
+                        "px-4 py-3 text-sm text-foreground",
                         column.align === "center" && "text-center",
                         column.align === "right" && "text-right"
                       )}

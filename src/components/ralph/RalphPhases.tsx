@@ -70,7 +70,7 @@ function PhaseBox({
         state === "complete" && "border-brand-teal shadow-[0_0_8px_rgba(27,208,184,0.3)]",
         state === "active" && "border-brand-orange animate-pulse",
         state === "failed" && "border-error",
-        state === "pending" && "border-iron-700"
+        state === "pending" && "border-muted"
       )}
     >
       <div
@@ -79,7 +79,7 @@ function PhaseBox({
           state === "complete" && "text-brand-teal",
           state === "active" && "text-brand-orange",
           state === "failed" && "text-error",
-          state === "pending" && "text-iron-500"
+          state === "pending" && "text-muted-foreground"
         )}
       >
         <PhaseIcon state={state} />
@@ -90,7 +90,7 @@ function PhaseBox({
           state === "complete" && "text-brand-teal",
           state === "active" && "text-brand-orange",
           state === "failed" && "text-error",
-          state === "pending" && "text-text-muted"
+          state === "pending" && "text-muted-foreground"
         )}
       >
         {phase.label}
@@ -104,7 +104,7 @@ function ArrowConnector({ filled }: { filled: boolean }) {
     <div
       className={cn(
         "w-6 h-0.5 transition-colors duration-200",
-        filled ? "bg-brand-teal" : "bg-iron-700"
+        filled ? "bg-brand-teal" : "bg-muted"
       )}
     />
   );

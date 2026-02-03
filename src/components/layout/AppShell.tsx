@@ -20,7 +20,7 @@ interface AppShellProps {
  */
 export function AppShell({ children, className }: AppShellProps) {
   return (
-    <div className="min-h-screen bg-[var(--color-iron-950)] text-[var(--color-iron-25)]">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Desktop/Tablet Header */}
       <Header />
       

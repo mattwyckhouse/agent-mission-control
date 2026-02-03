@@ -11,24 +11,24 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles = {
   primary: cn(
-    "bg-[var(--color-iron-25)] text-[var(--color-iron-950)]",
-    "hover:bg-[var(--color-iron-100)]",
-    "active:bg-[var(--color-iron-200)]"
+    "bg-foreground text-background",
+    "hover:bg-foreground/90",
+    "active:bg-foreground/80"
   ),
   secondary: cn(
-    "bg-transparent text-[var(--color-iron-25)]",
-    "border border-white/30",
-    "hover:bg-white/5",
-    "active:bg-white/10"
+    "bg-transparent text-foreground",
+    "border border-border",
+    "hover:bg-accent",
+    "active:bg-accent/80"
   ),
   ghost: cn(
-    "bg-transparent text-[var(--color-iron-400)]",
-    "hover:text-[var(--color-iron-25)] hover:bg-white/5",
-    "active:bg-white/10"
+    "bg-transparent text-muted-foreground",
+    "hover:text-foreground hover:bg-accent",
+    "active:bg-accent/80"
   ),
   danger: cn(
-    "bg-[var(--color-error)] text-white",
-    "hover:bg-[var(--color-error-hover)]",
+    "bg-error text-white",
+    "hover:bg-error/90",
     "active:brightness-90"
   ),
 };
@@ -72,7 +72,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           "inline-flex items-center justify-center",
           "rounded-full font-medium",
           "transition-all duration-150",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-iron-950)]",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           
           // Variant and size
           variantStyles[variant],

@@ -28,7 +28,7 @@ const statusIcons: Record<TimelineItemStatus, { icon: string; className: string 
   },
   pending: { 
     icon: "○", 
-    className: "text-text-muted" 
+    className: "text-muted-foreground" 
   },
   error: { 
     icon: "✕", 
@@ -42,7 +42,7 @@ export function Timeline({ items, className, maxItems }: TimelineProps) {
   return (
     <div
       className={cn(
-        "border-l-2 border-white/10 pl-3 ml-1",
+        "border-l-2 border-border pl-3 ml-1",
         className
       )}
     >
@@ -50,7 +50,7 @@ export function Timeline({ items, className, maxItems }: TimelineProps) {
         <TimelineRow key={item.id} item={item} />
       ))}
       {maxItems && items.length > maxItems && (
-        <div className="flex items-center gap-2 py-1 text-xs text-text-muted">
+        <div className="flex items-center gap-2 py-1 text-xs text-muted-foreground">
           <span className="w-12 tabular-nums">...</span>
           <span className="w-4" />
           <span>+{items.length - maxItems} more</span>
@@ -69,13 +69,13 @@ function TimelineRow({ item }: TimelineRowProps) {
 
   return (
     <div className="flex items-start gap-2 py-1">
-      <span className="w-12 text-xs text-text-muted tabular-nums shrink-0">
+      <span className="w-12 text-xs text-muted-foreground tabular-nums shrink-0">
         {item.timestamp}
       </span>
       <span className={cn("w-4 text-sm shrink-0", iconClassName)}>
         {icon}
       </span>
-      <span className="text-sm text-text-primary flex-1">
+      <span className="text-sm text-foreground flex-1">
         {item.description}
       </span>
     </div>
@@ -96,8 +96,8 @@ export function CompactTimeline({ items, className }: CompactTimelineProps) {
         return (
           <div key={item.id} className="flex items-center gap-2 text-xs">
             <span className={cn("w-3", iconClassName)}>{icon}</span>
-            <span className="text-text-muted tabular-nums">{item.timestamp}</span>
-            <span className="text-text-secondary truncate">{item.description}</span>
+            <span className="text-muted-foreground tabular-nums">{item.timestamp}</span>
+            <span className="text-muted-foreground truncate">{item.description}</span>
           </div>
         )
       })}

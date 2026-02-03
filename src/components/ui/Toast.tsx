@@ -120,23 +120,23 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
   const typeConfig = {
     success: {
       icon: CheckCircle2,
-      bgClass: "bg-[#1BD0B8]/10 border-[#1BD0B8]/30",
-      iconClass: "text-[#1BD0B8]",
+      bgClass: "bg-brand-teal/10 border-brand-teal/30",
+      iconClass: "text-brand-teal",
     },
     error: {
       icon: AlertCircle,
-      bgClass: "bg-red-500/10 border-red-500/30",
-      iconClass: "text-red-400",
+      bgClass: "bg-error/10 border-error/30",
+      iconClass: "text-error",
     },
     warning: {
       icon: AlertTriangle,
-      bgClass: "bg-[#F27229]/10 border-[#F27229]/30",
-      iconClass: "text-[#F27229]",
+      bgClass: "bg-brand-orange/10 border-brand-orange/30",
+      iconClass: "text-brand-orange",
     },
     info: {
       icon: Info,
-      bgClass: "bg-blue-500/10 border-blue-500/30",
-      iconClass: "text-blue-400",
+      bgClass: "bg-info/10 border-info/30",
+      iconClass: "text-info",
     },
   };
 
@@ -160,7 +160,7 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
       <Icon className={cn("w-5 h-5 flex-shrink-0 mt-0.5", iconClass)} />
 
       {/* Message */}
-      <p className="flex-1 text-sm text-[var(--color-iron-25)] leading-relaxed">
+      <p className="flex-1 text-sm text-foreground leading-relaxed">
         {toast.message}
       </p>
 
@@ -169,9 +169,9 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
         onClick={handleDismiss}
         className={cn(
           "flex-shrink-0 p-1 rounded-md",
-          "text-[var(--color-iron-400)] hover:text-[var(--color-iron-25)]",
-          "hover:bg-white/10 transition-colors",
-          "focus:outline-none focus:ring-2 focus:ring-white/20"
+          "text-muted-foreground hover:text-foreground",
+          "hover:bg-accent transition-colors",
+          "focus:outline-none focus:ring-2 focus:ring-border"
         )}
         aria-label="Dismiss notification"
       >

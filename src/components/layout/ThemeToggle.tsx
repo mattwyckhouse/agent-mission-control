@@ -101,8 +101,8 @@ export function ThemeToggle({ className, showLabel = false }: ThemeToggleProps) 
       <button
         className={cn(
           "p-2 rounded-lg",
-          "bg-white/5 border border-white/10",
-          "text-[var(--color-iron-400)]",
+          "bg-accent border border-border",
+          "text-muted-foreground",
           className
         )}
         aria-label="Toggle theme"
@@ -126,10 +126,10 @@ export function ThemeToggle({ className, showLabel = false }: ThemeToggleProps) 
       onClick={cycleTheme}
       className={cn(
         "p-2 rounded-lg transition-all duration-200",
-        "bg-white/5 hover:bg-white/10",
-        "border border-white/10 hover:border-white/20",
-        "text-[var(--color-iron-400)] hover:text-[var(--color-iron-25)]",
-        "focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-teal)]/50",
+        "bg-accent hover:bg-accent/80",
+        "border border-border hover:border-border/80",
+        "text-muted-foreground hover:text-foreground",
+        "focus:outline-none focus:ring-2 focus:ring-brand-teal/50",
         showLabel && "flex items-center gap-2 px-3",
         className
       )}

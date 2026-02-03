@@ -174,7 +174,7 @@ export function LoopCard({ loop, className, onClick }: LoopCardProps) {
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-between pt-3 border-t border-white/5">
+      <div className="flex items-center justify-between pt-3 border-t border-border/50">
         <div className="text-xs text-text-muted">
           {formatDate(loop.startedAt)} at {formatTime(loop.startedAt)}
         </div>
@@ -201,7 +201,7 @@ export function LoopCardCompact({ loop, className, onClick }: LoopCardProps) {
       onClick={onClick}
       className={cn(
         "flex items-center gap-4 p-3 rounded-lg",
-        "bg-glass-1 border border-white/10",
+        "bg-glass-1 border border-border",
         "transition-all duration-200",
         onClick && "cursor-pointer hover:border-brand-teal/50 hover:bg-glass-2",
         className

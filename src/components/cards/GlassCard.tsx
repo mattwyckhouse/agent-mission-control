@@ -65,7 +65,7 @@ export function GlassCard({
         // Base styles
         "rounded-2xl",
         "backdrop-blur-[28px]",
-        "border border-white/10",
+        "border border-border",
         "shadow-[0px_12px_48px_rgba(0,0,0,0.32)]",
         "transition-all duration-200",
         
@@ -89,9 +89,9 @@ export function GlassCard({
         isInteractive && [
           "focus-visible:outline-none",
           "focus-visible:ring-2",
-          "focus-visible:ring-[var(--color-brand-teal)]",
+          "focus-visible:ring-brand-teal",
           "focus-visible:ring-offset-2",
-          "focus-visible:ring-offset-[var(--color-iron-950)]",
+          "focus-visible:ring-offset-background",
         ],
         
         className

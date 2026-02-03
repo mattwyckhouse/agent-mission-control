@@ -55,7 +55,7 @@ export function BarChart({
             {/* Label */}
             {showLabels && (
               <div
-                className="shrink-0 truncate text-sm text-text-secondary"
+                className="shrink-0 truncate text-sm text-muted-foreground"
                 style={{ width: `${labelWidth}px` }}
               >
                 {item.label}
@@ -63,7 +63,7 @@ export function BarChart({
             )}
 
             {/* Bar Container */}
-            <div className="h-2 flex-1 overflow-hidden rounded-full bg-iron-700">
+            <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
               {/* Bar Fill */}
               <div
                 className={cn(
@@ -79,7 +79,7 @@ export function BarChart({
 
             {/* Value */}
             <div
-              className="shrink-0 text-right text-sm font-medium text-text-primary"
+              className="shrink-0 text-right text-sm font-medium text-foreground"
               style={{ width: `${valueWidth}px` }}
             >
               {formatValue(item.value)}

@@ -51,16 +51,16 @@ function OutputLine({ entry }: OutputLineProps) {
         entry.type === "error" && "bg-error/5"
       )}
     >
-      <span className="text-xs text-text-muted font-mono tabular-nums flex-shrink-0 pt-0.5">
+      <span className="text-xs text-muted-foreground font-mono tabular-nums flex-shrink-0 pt-0.5">
         {formatTimestamp(entry.timestamp)}
       </span>
       <OutputIcon type={entry.type} />
       <span
         className={cn(
           "text-sm leading-relaxed flex-1",
-          entry.type === "success" && "text-text-primary",
+          entry.type === "success" && "text-foreground",
           entry.type === "error" && "text-error",
-          entry.type === "info" && "text-text-secondary"
+          entry.type === "info" && "text-muted-foreground"
         )}
       >
         {entry.message}
@@ -90,8 +90,8 @@ export function LiveOutput({
       <div
         className={cn(
           "flex items-center justify-center p-6",
-          "bg-glass-1 rounded-lg border border-iron-800",
-          "text-text-muted text-sm",
+          "bg-glass-1 rounded-lg border border-border",
+          "text-muted-foreground text-sm",
           className
         )}
         style={{ height: maxHeight }}
@@ -110,7 +110,7 @@ export function LiveOutput({
         ref={containerRef}
         className={cn(
           "overflow-y-auto overflow-x-hidden",
-          "bg-glass-1 rounded-lg border border-iron-800",
+          "bg-glass-1 rounded-lg border border-border",
           "custom-scrollbar"
         )}
         style={{ maxHeight }}
@@ -132,8 +132,8 @@ export function LiveOutput({
           className={cn(
             "absolute bottom-2 right-2",
             "p-1.5 rounded-full",
-            "bg-bg-secondary/90 border border-iron-700",
-            "text-text-muted hover:text-text-primary",
+            "bg-card/90 border border-border",
+            "text-muted-foreground hover:text-foreground",
             "transition-all duration-200",
             "hover:bg-glass-2"
           )}
@@ -161,13 +161,13 @@ export function LiveOutputCompact({
   return (
     <div
       className={cn(
-        "bg-glass-1 rounded-md border border-iron-800 p-2",
+        "bg-glass-1 rounded-md border border-border p-2",
         "font-mono text-xs",
         className
       )}
     >
       {recentOutput.length === 0 ? (
-        <span className="text-text-muted">No output yet...</span>
+        <span className="text-muted-foreground">No output yet...</span>
       ) : (
         <div className="space-y-0.5">
           {recentOutput.map((entry, index) => (
@@ -177,7 +177,7 @@ export function LiveOutputCompact({
                 "truncate",
                 entry.type === "success" && "text-success",
                 entry.type === "error" && "text-error",
-                entry.type === "info" && "text-text-muted"
+                entry.type === "info" && "text-muted-foreground"
               )}
             >
               {entry.message}

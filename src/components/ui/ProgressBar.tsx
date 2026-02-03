@@ -57,10 +57,10 @@ export function ProgressBar({
     <div className={cn("w-full", className)}>
       {showLabel && (
         <div className="flex justify-between items-center mb-1">
-          <span className="text-xs text-[var(--color-iron-400)]">
+          <span className="text-xs text-muted-foreground">
             {label || "Progress"}
           </span>
-          <span className="text-xs font-medium text-[var(--color-iron-25)]">
+          <span className="text-xs font-medium text-foreground">
             {Math.round(percentage)}%
           </span>
         </div>
@@ -68,7 +68,7 @@ export function ProgressBar({
       <div
         className={cn(
           "w-full rounded-full overflow-hidden",
-          "bg-[var(--color-iron-700)]",
+          "bg-muted",
           sizeStyles[size]
         )}
       >
@@ -109,8 +109,8 @@ export function SegmentedProgress({
             "flex-1 rounded-sm transition-colors",
             sizeStyles[size],
             index < current
-              ? "bg-[var(--color-brand-teal)]"
-              : "bg-[var(--color-iron-700)]"
+              ? "bg-brand-teal"
+              : "bg-muted"
           )}
         />
       ))}

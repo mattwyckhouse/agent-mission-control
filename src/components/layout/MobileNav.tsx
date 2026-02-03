@@ -30,8 +30,8 @@ export function MobileNav() {
       className={cn(
         "fixed bottom-0 left-0 right-0 z-[200]",
         "h-14 md:hidden",
-        "bg-[var(--color-iron-900)]/90 backdrop-blur-[28px]",
-        "border-t border-white/10",
+        "bg-card/90 backdrop-blur-[28px]",
+        "border-t border-border",
         "safe-area-inset-bottom"
       )}
     >
@@ -49,8 +49,8 @@ export function MobileNav() {
                 "min-w-[56px] py-1",
                 "transition-colors",
                 isActive
-                  ? "text-[var(--color-brand-teal)]"
-                  : "text-[var(--color-iron-500)]"
+                  ? "text-brand-teal"
+                  : "text-muted-foreground"
               )}
             >
               <Icon className="w-6 h-6" />

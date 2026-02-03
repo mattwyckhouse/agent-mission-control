@@ -156,7 +156,7 @@ export function ActionToast({
           className={cn(
             "flex-shrink-0 p-1 rounded-lg",
             "text-muted-foreground hover:text-foreground",
-            "hover:bg-white/10 transition-colors",
+            "hover:bg-accent transition-colors",
             "focus:outline-none focus:ring-2 focus:ring-brand-teal/50"
           )}
           aria-label="Dismiss notification"
@@ -167,7 +167,7 @@ export function ActionToast({
 
       {/* Duration indicator (optional) */}
       {duration > 0 && (
-        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/10 rounded-b-xl overflow-hidden">
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-border rounded-b-xl overflow-hidden">
           <div
             className={cn("h-full", config.textClass.replace("text-", "bg-"))}
             style={{
