@@ -8,14 +8,39 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
+// Helper to resolve agent name to UUID
+async function resolveAgentId(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  agentIdOrName: string | null
+): Promise<string | null> {
+  if (!agentIdOrName) return null;
+  
+  // If it looks like a UUID, return as-is
+  if (agentIdOrName.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+    return agentIdOrName;
+  }
+  
+  // Try to look up by name
+  const { data } = await supabase
+    .from("agents")
+    .select("id")
+    .eq("name", agentIdOrName.toLowerCase())
+    .single();
+  
+  // Type assertion since Supabase types may not be complete
+  return (data as { id: string } | null)?.id || null;
+}
+
 // POST — Log a new inter-agent message
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
     const {
-      from_agent_id,
-      to_agent_id,
+      from_agent_id: fromAgentInput,
+      to_agent_id: toAgentInput,
+      from_agent, // Alternative: agent name
+      to_agent,   // Alternative: agent name
       from_human = false,
       to_human = false,
       content,
@@ -33,14 +58,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!from_agent_id && !from_human) {
+    const fromInput = fromAgentInput || from_agent;
+    const toInput = toAgentInput || to_agent;
+
+    if (!fromInput && !from_human) {
       return NextResponse.json(
-        { error: "from_agent_id or from_human is required" },
+        { error: "from_agent_id, from_agent, or from_human is required" },
         { status: 400 }
       );
     }
 
     const supabase = await createClient();
+
+    // Resolve agent names to UUIDs if needed
+    const from_agent_id = await resolveAgentId(supabase, fromInput);
+    const to_agent_id = await resolveAgentId(supabase, toInput);
 
     // Use explicit typing since Supabase types may not be fully generated
     const messageData = {
@@ -54,6 +86,8 @@ export async function POST(request: NextRequest) {
       thread_id,
       metadata: {
         ...metadata,
+        from_input: fromInput, // Store original input for reference
+        to_input: toInput,
         logged_at: new Date().toISOString(),
       },
     };
