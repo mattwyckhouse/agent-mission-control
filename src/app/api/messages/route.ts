@@ -123,14 +123,19 @@ export async function GET(request: NextRequest) {
     
     const limit = parseInt(searchParams.get("limit") || "50");
     const offset = parseInt(searchParams.get("offset") || "0");
-    const from_agent = searchParams.get("from_agent");
-    const to_agent = searchParams.get("to_agent");
-    const agent = searchParams.get("agent"); // Either from or to
+    const from_agent_param = searchParams.get("from_agent");
+    const to_agent_param = searchParams.get("to_agent");
+    const agent_param = searchParams.get("agent"); // Either from or to
     const task_id = searchParams.get("task_id");
     const thread_id = searchParams.get("thread_id");
     const since = searchParams.get("since"); // ISO timestamp
 
     const supabase = await createClient();
+
+    // Resolve agent names to UUIDs
+    const from_agent = await resolveAgentId(supabase, from_agent_param);
+    const to_agent = await resolveAgentId(supabase, to_agent_param);
+    const agent = await resolveAgentId(supabase, agent_param);
 
     let query = supabase
       .from("messages")
@@ -138,16 +143,16 @@ export async function GET(request: NextRequest) {
       .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
 
-    // Apply filters
-    if (from_agent) {
+    // Apply filters (only if resolved successfully or was already a UUID)
+    if (from_agent_param && from_agent) {
       query = query.eq("from_agent_id", from_agent);
     }
     
-    if (to_agent) {
+    if (to_agent_param && to_agent) {
       query = query.eq("to_agent_id", to_agent);
     }
     
-    if (agent) {
+    if (agent_param && agent) {
       query = query.or(`from_agent_id.eq.${agent},to_agent_id.eq.${agent}`);
     }
     
