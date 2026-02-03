@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowLeft, ClipboardList, MessageSquare, Square, RotateCcw, Zap, DollarSign, Activity } from "lucide-react"
+import { ArrowLeft, Zap, DollarSign, Activity } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
 import { mapAgentStatusToUI } from "@/types"
 import type { Agent } from "@/types"
@@ -8,6 +8,7 @@ import { StatusBadge } from "@/components/ui/StatusBadge"
 import { Button } from "@/components/ui/Button"
 import { Timeline, type TimelineItem } from "@/components/data/Timeline"
 import { CostSparkline } from "@/components/data/SparklineChart"
+import { AgentControlPanel } from "@/components/agents/AgentControlPanel"
 
 interface AgentDetailPageProps {
   params: Promise<{ id: string }>
@@ -179,24 +180,13 @@ export default async function AgentDetailPage({ params }: AgentDetailPageProps) 
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="mt-6 pt-6 border-t border-white/5 flex flex-wrap gap-3">
-            <Button variant="secondary" size="sm">
-              <ClipboardList className="w-4 h-4 mr-2" />
-              View Tasks
-            </Button>
-            <Button variant="secondary" size="sm">
-              <MessageSquare className="w-4 h-4 mr-2" />
-              Send Message
-            </Button>
-            <Button variant="ghost" size="sm" disabled={agent.status === "offline"}>
-              <Square className="w-4 h-4 mr-2" />
-              Stop
-            </Button>
-            <Button variant="ghost" size="sm">
-              <RotateCcw className="w-4 h-4 mr-2" />
-              Restart
-            </Button>
+          {/* Agent Controls */}
+          <div className="mt-6 pt-6 border-t border-white/5">
+            <AgentControlPanel
+              agentId={agent.id}
+              agentName={agent.display_name}
+              agentStatus={agent.status}
+            />
           </div>
         </GlassCard>
 
