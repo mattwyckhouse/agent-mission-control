@@ -1,116 +1,102 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { GlassCard } from "@/components/cards/GlassCard";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { RalphPhases } from "@/components/ralph/RalphPhases";
 import { RalphProgress } from "@/components/ralph/RalphProgress";
 import { LiveOutput } from "@/components/ralph/LiveOutput";
 import { LoopCard } from "@/components/ralph/LoopCard";
-import { StatusBadge } from "@/components/ui/StatusBadge";
 import { Button } from "@/components/ui/Button";
-import { Play, Pause, RefreshCw, History, Zap } from "lucide-react";
+import { RefreshCw, History, Zap, AlertCircle } from "lucide-react";
 import type { RalphLoop } from "@/types";
 
-// Mock data - will be replaced with Supabase integration
-import { mockRalphLoops } from "@/lib/mock-data";
+// API endpoint to fetch Ralph data
+const RALPH_API = "/api/ralph";
 
-// Generate some historical completed loops for demo
-const completedLoops: RalphLoop[] = [
-  {
-    id: "ralph-setup-1",
-    buildId: "initial-setup",
-    name: "Initial Project Setup",
-    agent: "forge",
-    phase: "done",
-    currentStep: 12,
-    totalSteps: 12,
-    startedAt: "2026-02-01T10:00:00Z",
-    lastUpdate: "2026-02-01T11:30:00Z",
-    tokensUsed: 18500,
-    cost: 0.93,
-    output: [],
-  },
-  {
-    id: "ralph-design-1",
-    buildId: "design-system",
-    name: "Design System Components",
-    agent: "forge",
-    phase: "done",
-    currentStep: 8,
-    totalSteps: 8,
-    startedAt: "2026-02-01T14:00:00Z",
-    lastUpdate: "2026-02-01T14:45:00Z",
-    tokensUsed: 12000,
-    cost: 0.60,
-    output: [],
-  },
-  {
-    id: "ralph-blocked-1",
-    buildId: "api-integration",
-    name: "API Integration (Blocked)",
-    agent: "forge",
-    phase: "blocked",
-    currentStep: 5,
-    totalSteps: 15,
-    startedAt: "2026-02-02T09:00:00Z",
-    lastUpdate: "2026-02-02T09:30:00Z",
-    tokensUsed: 8500,
-    cost: 0.43,
-    output: [
-      { timestamp: "2026-02-02T09:30:00Z", type: "error", message: "Missing SUPABASE_URL environment variable" },
-    ],
-  },
-];
+interface RalphData {
+  activeBuilds: RalphLoop[];
+  completedBuilds: RalphLoop[];
+  stats: {
+    totalLoops: number;
+    completed: number;
+    blocked: number;
+    totalCost: number;
+  };
+}
 
 export default function RalphPage() {
-  const [activeLoop, setActiveLoop] = useState<RalphLoop | null>(
-    mockRalphLoops[0] || null
-  );
-  const [historicalLoops] = useState<RalphLoop[]>(completedLoops);
-  const [showAllHistory, setShowAllHistory] = useState(false);
+  const [data, setData] = useState<RalphData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [showAllHistory, setShowAllHistory] = useState(false);
 
-  // Simulate live updates for the active loop
-  const activePhase = activeLoop?.phase;
-  useEffect(() => {
-    if (!activePhase || activePhase === "done" || activePhase === "blocked") {
-      return;
+  const fetchData = useCallback(async () => {
+    try {
+      const res = await fetch(RALPH_API);
+      if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
+      const json = await res.json();
+      setData(json);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load Ralph data");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
     }
+  }, []);
 
-    const interval = setInterval(() => {
-      setActiveLoop((prev) => {
-        if (!prev) return null;
-        // Simulate progress
-        const newOutput = [
-          ...prev.output,
-          {
-            timestamp: new Date().toISOString(),
-            type: "info" as const,
-            message: `Processing step ${prev.currentStep + 1}...`,
-          },
-        ];
-        return {
-          ...prev,
-          lastUpdate: new Date().toISOString(),
-          output: newOutput.slice(-20), // Keep last 20 entries
-        };
-      });
-    }, 10000);
-
+  useEffect(() => {
+    fetchData();
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
-  }, [activePhase]);
+  }, [fetchData]);
 
-  const handleRefresh = async () => {
+  const handleRefresh = () => {
     setRefreshing(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setRefreshing(false);
+    fetchData();
   };
 
-  const displayedHistory = showAllHistory
-    ? historicalLoops
-    : historicalLoops.slice(0, 3);
+  const activeLoop = data?.activeBuilds[0] || null;
+  const historicalLoops = data?.completedBuilds || [];
+  const displayedHistory = showAllHistory ? historicalLoops : historicalLoops.slice(0, 3);
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <PageHeader title="Ralph Monitor" subtitle="Loading..." />
+        <GlassCard variant="glass-2" padding="lg" className="animate-pulse">
+          <div className="h-64 bg-white/5 rounded-lg" />
+        </GlassCard>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <PageHeader
+          title="Ralph Monitor"
+          subtitle="Autonomous build loop status"
+          actions={
+            <Button variant="ghost" size="sm" onClick={handleRefresh}>
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Retry
+            </Button>
+          }
+        />
+        <GlassCard variant="glass-2" padding="lg" className="text-center">
+          <AlertCircle className="w-12 h-12 mx-auto mb-4 text-error" />
+          <h3 className="text-lg font-semibold text-text-primary mb-2">
+            Failed to Load
+          </h3>
+          <p className="text-sm text-text-muted">{error}</p>
+        </GlassCard>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -146,30 +132,19 @@ export default function RalphPage() {
                   <h2 className="text-xl font-heading font-bold text-text-primary">
                     {activeLoop.name}
                   </h2>
-                  <StatusBadge
-                    status={
-                      activeLoop.phase === "done"
-                        ? "success"
-                        : activeLoop.phase === "blocked"
-                        ? "error"
-                        : "working"
-                    }
-                  />
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                    activeLoop.phase === "done" 
+                      ? "bg-success/20 text-success" 
+                      : activeLoop.phase === "blocked"
+                      ? "bg-error/20 text-error"
+                      : "bg-brand-orange/20 text-brand-orange"
+                  }`}>
+                    {activeLoop.phase === "done" ? "Complete" : activeLoop.phase === "blocked" ? "Blocked" : "Working"}
+                  </span>
                 </div>
                 <p className="text-sm text-text-muted">
                   Build ID: {activeLoop.buildId} • Agent: @{activeLoop.agent}
                 </p>
-              </div>
-
-              <div className="flex gap-2">
-                <Button variant="secondary" size="sm" disabled>
-                  <Pause className="w-4 h-4 mr-1" />
-                  Pause
-                </Button>
-                <Button variant="primary" size="sm" disabled>
-                  <Play className="w-4 h-4 mr-1" />
-                  Resume
-                </Button>
               </div>
             </div>
 
@@ -190,12 +165,14 @@ export default function RalphPage() {
             />
 
             {/* Live Output */}
-            <div>
-              <h3 className="text-sm font-heading font-semibold text-text-secondary mb-3">
-                Live Output
-              </h3>
-              <LiveOutput output={activeLoop.output} maxHeight={200} autoScroll />
-            </div>
+            {activeLoop.output && activeLoop.output.length > 0 && (
+              <div>
+                <h3 className="text-sm font-heading font-semibold text-text-secondary mb-3">
+                  Live Output
+                </h3>
+                <LiveOutput output={activeLoop.output} maxHeight={200} autoScroll />
+              </div>
+            )}
           </div>
         </GlassCard>
       ) : (
@@ -249,7 +226,6 @@ export default function RalphPage() {
                 key={loop.id}
                 loop={loop}
                 onClick={() => {
-                  // Could navigate to detail view
                   console.log("View loop:", loop.id);
                 }}
               />
@@ -259,46 +235,44 @@ export default function RalphPage() {
       </div>
 
       {/* Summary Stats */}
-      <GlassCard variant="glass-1" padding="md">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-          <div>
-            <div className="text-2xl font-heading font-bold text-text-primary">
-              {historicalLoops.filter((l) => l.phase === "done").length + (activeLoop ? 1 : 0)}
+      {data?.stats && (
+        <GlassCard variant="glass-1" padding="md">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div>
+              <div className="text-2xl font-heading font-bold text-text-primary">
+                {data.stats.totalLoops}
+              </div>
+              <div className="text-xs text-text-muted uppercase tracking-wide">
+                Total Loops
+              </div>
             </div>
-            <div className="text-xs text-text-muted uppercase tracking-wide">
-              Total Loops
+            <div>
+              <div className="text-2xl font-heading font-bold text-success">
+                {data.stats.completed}
+              </div>
+              <div className="text-xs text-text-muted uppercase tracking-wide">
+                Completed
+              </div>
             </div>
-          </div>
-          <div>
-            <div className="text-2xl font-heading font-bold text-success">
-              {historicalLoops.filter((l) => l.phase === "done").length}
+            <div>
+              <div className="text-2xl font-heading font-bold text-error">
+                {data.stats.blocked}
+              </div>
+              <div className="text-xs text-text-muted uppercase tracking-wide">
+                Blocked
+              </div>
             </div>
-            <div className="text-xs text-text-muted uppercase tracking-wide">
-              Completed
-            </div>
-          </div>
-          <div>
-            <div className="text-2xl font-heading font-bold text-error">
-              {historicalLoops.filter((l) => l.phase === "blocked").length}
-            </div>
-            <div className="text-xs text-text-muted uppercase tracking-wide">
-              Blocked
-            </div>
-          </div>
-          <div>
-            <div className="text-2xl font-heading font-bold text-brand-teal">
-              $
-              {(
-                historicalLoops.reduce((sum, l) => sum + l.cost, 0) +
-                (activeLoop?.cost || 0)
-              ).toFixed(2)}
-            </div>
-            <div className="text-xs text-text-muted uppercase tracking-wide">
-              Total Cost
+            <div>
+              <div className="text-2xl font-heading font-bold text-brand-teal">
+                ${data.stats.totalCost.toFixed(2)}
+              </div>
+              <div className="text-xs text-text-muted uppercase tracking-wide">
+                Total Cost
+              </div>
             </div>
           </div>
-        </div>
-      </GlassCard>
+        </GlassCard>
+      )}
     </div>
   );
 }
