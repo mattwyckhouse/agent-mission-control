@@ -72,18 +72,18 @@ export function RalphProgress({
       {/* Main Progress Display */}
       <div className="flex items-center justify-between">
         <div className="flex items-baseline gap-2">
-          <span className="text-3xl font-heading font-bold text-text-primary">
+          <span className="text-3xl font-heading font-bold text-foreground">
             {progress}%
           </span>
-          <span className="text-sm text-text-secondary">
+          <span className="text-sm text-muted-foreground">
             complete
           </span>
         </div>
         <div className="text-right">
-          <span className="text-lg font-heading font-semibold text-text-primary">
+          <span className="text-lg font-heading font-semibold text-foreground">
             Step {currentStep}
           </span>
-          <span className="text-lg text-text-muted"> / {totalSteps}</span>
+          <span className="text-lg text-muted-foreground"> / {totalSteps}</span>
         </div>
       </div>
 
@@ -100,10 +100,10 @@ export function RalphProgress({
         {/* Elapsed Time */}
         {elapsed && (
           <div className="flex items-center gap-2 text-sm">
-            <Clock className="w-4 h-4 text-text-muted" />
+            <Clock className="w-4 h-4 text-muted-foreground" />
             <div>
-              <span className="text-text-secondary">Elapsed:</span>{" "}
-              <span className="font-medium text-text-primary">{elapsed}</span>
+              <span className="text-muted-foreground">Elapsed:</span>{" "}
+              <span className="font-medium text-foreground">{elapsed}</span>
             </div>
           </div>
         )}
@@ -112,8 +112,8 @@ export function RalphProgress({
         <div className="flex items-center gap-2 text-sm">
           <Zap className="w-4 h-4 text-brand-orange" />
           <div>
-            <span className="text-text-secondary">Tokens:</span>{" "}
-            <span className="font-medium text-text-primary">{formatNumber(tokensUsed)}</span>
+            <span className="text-muted-foreground">Tokens:</span>{" "}
+            <span className="font-medium text-foreground">{formatNumber(tokensUsed)}</span>
           </div>
         </div>
 
@@ -121,8 +121,8 @@ export function RalphProgress({
         <div className="flex items-center gap-2 text-sm">
           <DollarSign className="w-4 h-4 text-success" />
           <div>
-            <span className="text-text-secondary">Cost:</span>{" "}
-            <span className="font-medium text-text-primary">{formatCost(cost)}</span>
+            <span className="text-muted-foreground">Cost:</span>{" "}
+            <span className="font-medium text-foreground">{formatCost(cost)}</span>
           </div>
         </div>
 
@@ -131,8 +131,8 @@ export function RalphProgress({
           <div className="flex items-center gap-2 text-sm">
             <TrendingUp className="w-4 h-4 text-brand-teal" />
             <div>
-              <span className="text-text-secondary">ETA:</span>{" "}
-              <span className="font-medium text-text-primary">
+              <span className="text-muted-foreground">ETA:</span>{" "}
+              <span className="font-medium text-foreground">
                 {formatTime(estimatedCompletion)}
               </span>
             </div>
@@ -142,7 +142,7 @@ export function RalphProgress({
 
       {/* Last Update */}
       {lastUpdate && (
-        <div className="text-xs text-text-muted">
+        <div className="text-xs text-muted-foreground">
           Last update: {formatTime(lastUpdate)}
         </div>
       )}
@@ -161,8 +161,8 @@ export function RalphProgressCompact({
   return (
     <div className={cn("space-y-2", className)}>
       <div className="flex items-center justify-between text-sm">
-        <span className="font-medium text-text-primary">{progress}%</span>
-        <span className="text-text-muted">
+        <span className="font-medium text-foreground">{progress}%</span>
+        <span className="text-muted-foreground">
           {currentStep}/{totalSteps}
         </span>
       </div>

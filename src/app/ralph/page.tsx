@@ -68,7 +68,7 @@ export default function RalphPage() {
       <div className="space-y-6">
         <PageHeader title="Ralph Monitor" subtitle="Loading..." />
         <GlassCard variant="glass-2" padding="lg" className="animate-pulse">
-          <div className="h-64 bg-white/5 rounded-lg" />
+          <div className="h-64 bg-muted rounded-lg" />
         </GlassCard>
       </div>
     );
@@ -89,10 +89,10 @@ export default function RalphPage() {
         />
         <GlassCard variant="glass-2" padding="lg" className="text-center">
           <AlertCircle className="w-12 h-12 mx-auto mb-4 text-error" />
-          <h3 className="text-lg font-semibold text-text-primary mb-2">
+          <h3 className="text-lg font-semibold text-foreground mb-2">
             Failed to Load
           </h3>
-          <p className="text-sm text-text-muted">{error}</p>
+          <p className="text-sm text-muted-foreground">{error}</p>
         </GlassCard>
       </div>
     );
@@ -129,7 +129,7 @@ export default function RalphPage() {
               <div>
                 <div className="flex items-center gap-3 mb-2">
                   <Zap className="w-6 h-6 text-brand-orange" />
-                  <h2 className="text-xl font-heading font-bold text-text-primary">
+                  <h2 className="text-xl font-heading font-bold text-foreground">
                     {activeLoop.name}
                   </h2>
                   <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
@@ -142,7 +142,7 @@ export default function RalphPage() {
                     {activeLoop.phase === "done" ? "Complete" : activeLoop.phase === "blocked" ? "Blocked" : "Working"}
                   </span>
                 </div>
-                <p className="text-sm text-text-muted">
+                <p className="text-sm text-muted-foreground">
                   Build ID: {activeLoop.buildId} • Agent: @{activeLoop.agent}
                 </p>
               </div>
@@ -167,7 +167,7 @@ export default function RalphPage() {
             {/* Live Output */}
             {activeLoop.output && activeLoop.output.length > 0 && (
               <div>
-                <h3 className="text-sm font-heading font-semibold text-text-secondary mb-3">
+                <h3 className="text-sm font-heading font-semibold text-muted-foreground mb-3">
                   Live Output
                 </h3>
                 <LiveOutput output={activeLoop.output} maxHeight={200} autoScroll />
@@ -178,11 +178,11 @@ export default function RalphPage() {
       ) : (
         <GlassCard variant="glass-1" padding="lg" className="text-center">
           <div className="py-8">
-            <Zap className="w-12 h-12 mx-auto mb-4 text-text-muted opacity-50" />
-            <h3 className="text-lg font-heading font-semibold text-text-secondary mb-2">
+            <Zap className="w-12 h-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+            <h3 className="text-lg font-heading font-semibold text-muted-foreground mb-2">
               No Active Builds
             </h3>
-            <p className="text-sm text-text-muted max-w-md mx-auto">
+            <p className="text-sm text-muted-foreground max-w-md mx-auto">
               Ralph loops run autonomously when triggered. Check back later or
               view completed builds below.
             </p>
@@ -194,11 +194,11 @@ export default function RalphPage() {
       <div>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <History className="w-5 h-5 text-text-muted" />
-            <h2 className="text-lg font-heading font-semibold text-text-primary">
+            <History className="w-5 h-5 text-muted-foreground" />
+            <h2 className="text-lg font-heading font-semibold text-foreground">
               Build History
             </h2>
-            <span className="text-sm text-text-muted">
+            <span className="text-sm text-muted-foreground">
               ({historicalLoops.length} loops)
             </span>
           </div>
@@ -215,7 +215,7 @@ export default function RalphPage() {
 
         {historicalLoops.length === 0 ? (
           <GlassCard variant="glass-1" padding="md" className="text-center">
-            <p className="text-sm text-text-muted py-4">
+            <p className="text-sm text-muted-foreground py-4">
               No completed builds yet.
             </p>
           </GlassCard>
@@ -239,10 +239,10 @@ export default function RalphPage() {
         <GlassCard variant="glass-1" padding="md">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div>
-              <div className="text-2xl font-heading font-bold text-text-primary">
+              <div className="text-2xl font-heading font-bold text-foreground">
                 {data.stats.totalLoops}
               </div>
-              <div className="text-xs text-text-muted uppercase tracking-wide">
+              <div className="text-xs text-muted-foreground uppercase tracking-wide">
                 Total Loops
               </div>
             </div>
@@ -250,7 +250,7 @@ export default function RalphPage() {
               <div className="text-2xl font-heading font-bold text-success">
                 {data.stats.completed}
               </div>
-              <div className="text-xs text-text-muted uppercase tracking-wide">
+              <div className="text-xs text-muted-foreground uppercase tracking-wide">
                 Completed
               </div>
             </div>
@@ -258,7 +258,7 @@ export default function RalphPage() {
               <div className="text-2xl font-heading font-bold text-error">
                 {data.stats.blocked}
               </div>
-              <div className="text-xs text-text-muted uppercase tracking-wide">
+              <div className="text-xs text-muted-foreground uppercase tracking-wide">
                 Blocked
               </div>
             </div>
@@ -266,7 +266,7 @@ export default function RalphPage() {
               <div className="text-2xl font-heading font-bold text-brand-teal">
                 ${data.stats.totalCost.toFixed(2)}
               </div>
-              <div className="text-xs text-text-muted uppercase tracking-wide">
+              <div className="text-xs text-muted-foreground uppercase tracking-wide">
                 Total Cost
               </div>
             </div>

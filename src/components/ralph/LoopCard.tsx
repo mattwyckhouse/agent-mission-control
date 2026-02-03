@@ -104,11 +104,11 @@ export function LoopCard({ loop, className, onClick }: LoopCardProps) {
             {isBlocked && (
               <XCircle className="w-5 h-5 text-error flex-shrink-0" />
             )}
-            <h3 className="text-base font-heading font-semibold text-text-primary truncate">
+            <h3 className="text-base font-heading font-semibold text-foreground truncate">
               {loop.name}
             </h3>
           </div>
-          <p className="text-xs text-text-muted">
+          <p className="text-xs text-muted-foreground">
             Build ID: {loop.buildId}
           </p>
         </div>
@@ -121,8 +121,8 @@ export function LoopCard({ loop, className, onClick }: LoopCardProps) {
       {/* Progress */}
       <div className="mb-4">
         <div className="flex items-center justify-between text-sm mb-2">
-          <span className="text-text-secondary">Progress</span>
-          <span className="text-text-primary font-medium">
+          <span className="text-muted-foreground">Progress</span>
+          <span className="text-foreground font-medium">
             {loop.currentStep}/{loop.totalSteps} steps ({progress}%)
           </span>
         </div>
@@ -138,18 +138,18 @@ export function LoopCard({ loop, className, onClick }: LoopCardProps) {
       <div className="grid grid-cols-2 gap-3 mb-3">
         {/* Agent */}
         <div className="flex items-center gap-2 text-sm">
-          <User className="w-4 h-4 text-text-muted flex-shrink-0" />
-          <span className="text-text-secondary">Agent:</span>
-          <span className="font-medium text-text-primary truncate">
+          <User className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+          <span className="text-muted-foreground">Agent:</span>
+          <span className="font-medium text-foreground truncate">
             {loop.agent}
           </span>
         </div>
 
         {/* Duration */}
         <div className="flex items-center gap-2 text-sm">
-          <Clock className="w-4 h-4 text-text-muted flex-shrink-0" />
-          <span className="text-text-secondary">Time:</span>
-          <span className="font-medium text-text-primary">
+          <Clock className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+          <span className="text-muted-foreground">Time:</span>
+          <span className="font-medium text-foreground">
             {duration}
           </span>
         </div>
@@ -157,8 +157,8 @@ export function LoopCard({ loop, className, onClick }: LoopCardProps) {
         {/* Tokens */}
         <div className="flex items-center gap-2 text-sm">
           <Zap className="w-4 h-4 text-brand-orange flex-shrink-0" />
-          <span className="text-text-secondary">Tokens:</span>
-          <span className="font-medium text-text-primary">
+          <span className="text-muted-foreground">Tokens:</span>
+          <span className="font-medium text-foreground">
             {formatNumber(loop.tokensUsed)}
           </span>
         </div>
@@ -166,8 +166,8 @@ export function LoopCard({ loop, className, onClick }: LoopCardProps) {
         {/* Cost */}
         <div className="flex items-center gap-2 text-sm">
           <DollarSign className="w-4 h-4 text-success flex-shrink-0" />
-          <span className="text-text-secondary">Cost:</span>
-          <span className="font-medium text-text-primary">
+          <span className="text-muted-foreground">Cost:</span>
+          <span className="font-medium text-foreground">
             {formatCost(loop.cost)}
           </span>
         </div>
@@ -175,11 +175,11 @@ export function LoopCard({ loop, className, onClick }: LoopCardProps) {
 
       {/* Footer */}
       <div className="flex items-center justify-between pt-3 border-t border-border/50">
-        <div className="text-xs text-text-muted">
+        <div className="text-xs text-muted-foreground">
           {formatDate(loop.startedAt)} at {formatTime(loop.startedAt)}
         </div>
         {onClick && (
-          <ChevronRight className="w-4 h-4 text-text-muted group-hover:text-brand-teal transition-colors" />
+          <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-brand-teal transition-colors" />
         )}
       </div>
     </GlassCard>
@@ -223,14 +223,14 @@ export function LoopCardCompact({ loop, className, onClick }: LoopCardProps) {
       {/* Info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-heading font-semibold text-text-primary truncate">
+          <span className="text-sm font-heading font-semibold text-foreground truncate">
             {loop.name}
           </span>
-          <span className="text-xs text-text-muted">
+          <span className="text-xs text-muted-foreground">
             @{loop.agent}
           </span>
         </div>
-        <div className="flex items-center gap-4 mt-1 text-xs text-text-secondary">
+        <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
           <span>{progress}% • {loop.currentStep}/{loop.totalSteps}</span>
           <span>{formatNumber(loop.tokensUsed)} tokens</span>
           <span>{formatCost(loop.cost)}</span>
@@ -239,7 +239,7 @@ export function LoopCardCompact({ loop, className, onClick }: LoopCardProps) {
 
       {/* Arrow */}
       {onClick && (
-        <ChevronRight className="w-4 h-4 text-text-muted flex-shrink-0" />
+        <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
       )}
     </div>
   );
