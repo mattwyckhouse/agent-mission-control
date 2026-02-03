@@ -46,14 +46,16 @@ const config: Config = {
       },
       fontFamily: {
         heading: [
-          "TWK Everett",
+          "var(--font-inter)",
           "Inter",
           "SF Pro Display",
           "-apple-system",
           "sans-serif",
         ],
         body: [
+          "var(--font-instrument)",
           "Instrument Sans",
+          "var(--font-inter)",
           "Inter",
           "SF Pro Text",
           "-apple-system",
