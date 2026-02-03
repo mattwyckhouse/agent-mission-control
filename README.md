@@ -75,8 +75,26 @@ node scripts/run-migration.mjs
 │   │   ├── page.tsx      # Dashboard home
 │   │   ├── layout.tsx    # Root layout
 │   │   └── globals.css   # Global styles
-│   └── lib/
-│       └── supabase/     # Supabase client & types
+│   ├── components/
+│   │   ├── cards/        # Card components
+│   │   │   ├── AgentCard.tsx
+│   │   │   ├── AgentGrid.tsx
+│   │   │   ├── GlassCard.tsx
+│   │   │   └── MetricCard.tsx
+│   │   ├── layout/       # Layout components
+│   │   │   ├── AppShell.tsx
+│   │   │   ├── Header.tsx
+│   │   │   ├── MobileNav.tsx
+│   │   │   └── PageHeader.tsx
+│   │   └── ui/           # UI primitives
+│   │       ├── Button.tsx
+│   │       ├── IconButton.tsx
+│   │       ├── ProgressBar.tsx
+│   │       └── StatusBadge.tsx
+│   ├── lib/
+│   │   ├── supabase/     # Supabase client & types
+│   │   └── utils/        # Utility functions
+│   └── types/            # TypeScript interfaces
 ├── supabase/
 │   └── migrations/       # Database migrations
 ├── docs/
