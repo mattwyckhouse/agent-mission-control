@@ -2,15 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, ListTodo, RefreshCw, DollarSign, Settings } from "lucide-react";
+import { Home, ListTodo, MessageSquare, RefreshCw, DollarSign } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { label: "Home", href: "/", icon: Home },
   { label: "Tasks", href: "/tasks", icon: ListTodo },
+  { label: "Messages", href: "/messages", icon: MessageSquare },
   { label: "Ralph", href: "/ralph", icon: RefreshCw },
   { label: "Costs", href: "/costs", icon: DollarSign },
-  { label: "Settings", href: "/settings", icon: Settings },
 ];
 
 /**
