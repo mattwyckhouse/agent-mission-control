@@ -6,7 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-### Added
+### Added — Phase 3: Agent Actions & Task Management
+
+- **Agent control panel** — Start/stop/trigger actions from agent detail page (1f3e588)
+- **ConfirmDialog component** — Reusable confirmation modal with customizable actions (4c258c2)
+- **ActionToast component** — Success/error feedback for agent actions (4c258c2)
+- **BulkActions component** — Multi-select operations for agents (7a26333)
+- **Task API routes** — CRUD endpoints for task management (e8c515c)
+- **TaskForm component** — Create and edit tasks with validation (e8c515c)
+- **TaskEditModal component** — Modal wrapper for task editing (9c3a39e)
+- **AssigneeSelect component** — Agent assignment dropdown with search (7c9c9aa)
+- **Task status transitions** — State machine for task workflow (6042106)
+- **Agent actions API tests** — Full coverage for action endpoints (37b25f1)
+
+### Added — Phase 2: Real-Time & Sync
+
+- **Real-time subscription hooks** — Live updates for dashboard data (dfeb5d9)
+- **SyncStatus component** — Visual indicator for data freshness (cadbd1b)
+- **ConnectionStatus component** — WebSocket connection indicator (cd1aa78)
+- **RealTimeDashboard component** — Live-updating agent grid (cd1aa78)
+
+### Added — Phase 1 (continued)
 
 - **Theme toggle** — Light/dark mode switch with system preference detection (0d4336f)
 - **Toast notification system** — Non-blocking alerts with auto-dismiss (0d4336f)
@@ -42,6 +62,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 
+- Theme switcher toggle behavior (8814c7a, efd6ea2)
+- Proper font loading with next/font (d529859)
+- Ralph Monitor now fetches from API correctly (e155509)
+- Agent detail page uses Supabase instead of mock data (0ec38fd)
+- OpenClaw sync service edge cases (cd76544)
+- ProgressBar gradient and glow effect (431876c)
 - TypeScript lint errors in AgentCard props (a9f9eca)
 - Removed unused Moon import (a9f9eca)
 
