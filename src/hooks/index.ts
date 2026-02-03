@@ -8,3 +8,4 @@ export { useCostsData } from "./useCostsData";
 
 // UI state hooks
 export { useNotifications } from "./useNotifications";
+export { useKeyboardShortcuts, COMMON_SHORTCUTS } from "./useKeyboardShortcuts";
