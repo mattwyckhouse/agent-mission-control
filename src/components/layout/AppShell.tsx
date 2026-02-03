@@ -26,12 +26,16 @@ export function AppShell({ children, className }: AppShellProps) {
       
       {/* Main Content */}
       <main
+        id="main-content"
+        tabIndex={-1}
         className={cn(
           "min-h-[calc(100vh-64px)]",
           "px-4 py-6 md:px-6 lg:px-12",
           "max-w-[1280px] mx-auto",
           // Add padding for mobile nav
           "pb-20 md:pb-6",
+          // Remove focus outline when clicked, keep for skip link
+          "focus:outline-none focus-visible:outline-none",
           className
         )}
       >

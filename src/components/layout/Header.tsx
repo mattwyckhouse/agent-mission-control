@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, Settings, Sun } from "lucide-react";
+import { Search, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "./ThemeToggle";
 
 const navItems = [
   { label: "Dashboard", href: "/" },
@@ -86,16 +87,7 @@ export function Header() {
           </div>
           
           {/* Theme Toggle */}
-          <button
-            className={cn(
-              "w-9 h-9 flex items-center justify-center rounded-lg",
-              "text-[var(--color-iron-400)] hover:text-[var(--color-iron-25)]",
-              "hover:bg-white/5 transition-colors"
-            )}
-            aria-label="Toggle theme"
-          >
-            <Sun className="w-5 h-5" />
-          </button>
+          <ThemeToggle />
           
           {/* Settings */}
           <button

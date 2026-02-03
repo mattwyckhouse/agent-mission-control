@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, KeyboardEvent } from "react";
 import { cn } from "@/lib/utils";
 
 interface GlassCardProps {
@@ -9,6 +9,7 @@ interface GlassCardProps {
   hover?: boolean;
   padding?: "none" | "sm" | "md" | "lg";
   onClick?: () => void;
+  "aria-label"?: string;
 }
 
 /**
@@ -28,6 +29,7 @@ export function GlassCard({
   hover = false,
   padding = "md",
   onClick,
+  "aria-label": ariaLabel,
 }: GlassCardProps) {
   const glassStyles = {
     "glass-1": "bg-[rgba(17,18,20,0.24)]",
@@ -42,9 +44,22 @@ export function GlassCard({
     lg: "p-6",
   };
 
+  const isInteractive = !!onClick;
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (isInteractive && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      onClick?.();
+    }
+  };
+
   return (
     <div
       onClick={onClick}
+      onKeyDown={isInteractive ? handleKeyDown : undefined}
+      role={isInteractive ? "button" : undefined}
+      tabIndex={isInteractive ? 0 : undefined}
+      aria-label={ariaLabel}
       className={cn(
         // Base styles
         "rounded-2xl",
@@ -67,6 +82,15 @@ export function GlassCard({
           "hover:border-[var(--color-brand-teal)]/50",
           "hover:shadow-[0px_8px_16px_rgba(0,0,0,0.25)]",
           "cursor-pointer",
+        ],
+        
+        // Focus states for interactive cards
+        isInteractive && [
+          "focus-visible:outline-none",
+          "focus-visible:ring-2",
+          "focus-visible:ring-[var(--color-brand-teal)]",
+          "focus-visible:ring-offset-2",
+          "focus-visible:ring-offset-[var(--color-iron-950)]",
         ],
         
         className

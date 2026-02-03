@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { RalphPhases } from "@/components/ralph/RalphPhases";
 import { RalphProgress } from "@/components/ralph/RalphProgress";
 import { LiveOutput } from "@/components/ralph/LiveOutput";
-import { LoopCard, LoopCardCompact } from "@/components/ralph/LoopCard";
+import { LoopCard } from "@/components/ralph/LoopCard";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { Button } from "@/components/ui/Button";
 import { Play, Pause, RefreshCw, History, Zap } from "lucide-react";
@@ -67,13 +67,14 @@ export default function RalphPage() {
   const [activeLoop, setActiveLoop] = useState<RalphLoop | null>(
     mockRalphLoops[0] || null
   );
-  const [historicalLoops, setHistoricalLoops] = useState<RalphLoop[]>(completedLoops);
+  const [historicalLoops] = useState<RalphLoop[]>(completedLoops);
   const [showAllHistory, setShowAllHistory] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
   // Simulate live updates for the active loop
+  const activePhase = activeLoop?.phase;
   useEffect(() => {
-    if (!activeLoop || activeLoop.phase === "done" || activeLoop.phase === "blocked") {
+    if (!activePhase || activePhase === "done" || activePhase === "blocked") {
       return;
     }
 
@@ -98,7 +99,7 @@ export default function RalphPage() {
     }, 10000);
 
     return () => clearInterval(interval);
-  }, [activeLoop?.phase]);
+  }, [activePhase]);
 
   const handleRefresh = async () => {
     setRefreshing(true);

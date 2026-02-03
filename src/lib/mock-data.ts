@@ -4,7 +4,7 @@
  * Used for development and testing before real data integration
  */
 
-import type { Agent, Task, RalphLoop, CostData, DailyCost, ActivityItem } from "@/types";
+import type { Agent, RalphLoop, CostData, DailyCost, ActivityItem } from "@/types";
 
 // Mock Agents - The Mission Control Squad
 export const mockAgents: Agent[] = [

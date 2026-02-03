@@ -33,6 +33,10 @@ export default function RootLayout({
       <body
         className={`${inter.variable} font-sans antialiased bg-[#111214] text-[#FAFAFB] min-h-screen`}
       >
+        {/* Skip to content link for keyboard/screen reader users */}
+        <a href="#main-content" className="skip-to-content">
+          Skip to main content
+        </a>
         {children}
       </body>
     </html>

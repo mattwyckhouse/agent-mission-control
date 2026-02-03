@@ -171,6 +171,7 @@
 /* ============================================
    LIGHT MODE OVERRIDES
    ============================================ */
+.light,
 [data-theme="light"] {
   color-scheme: light;
   
@@ -331,6 +332,51 @@
 }
 
 /* ============================================
+   FOCUS STYLES (Accessibility)
+   ============================================ */
+/* Visible focus ring for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--color-brand-teal);
+  outline-offset: 2px;
+}
+
+/* Remove default focus for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Enhanced focus for interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-brand-teal);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Skip to content link (screen reader / keyboard) */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 16px;
+  background: var(--color-brand-teal);
+  color: var(--color-iron-950);
+  font-weight: 600;
+  border-radius: 4px;
+  z-index: 9999;
+  transition: top 0.2s ease;
+}
+
+.skip-to-content:focus {
+  top: 8px;
+}
+
+/* ============================================
    REDUCED MOTION
    ============================================ */
 @media (prefers-reduced-motion: reduce) {
@@ -340,5 +386,42 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /* Keep critical UI indicators visible */
+  .animate-pulse-dot {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ============================================
+   HIGH CONTRAST MODE
+   ============================================ */
+@media (prefers-contrast: high) {
+  :root {
+    --border-subtle: 1px solid rgba(255, 255, 255, 0.3);
+    --border-light: 1px solid rgba(255, 255, 255, 0.4);
+    --border-medium: 1px solid rgba(255, 255, 255, 0.5);
+  }
+  
+  .glass-1,
+  .glass-2,
+  .glass-3 {
+    background: var(--color-iron-900);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* ============================================
+   TOUCH TARGET SIZING
+   ============================================ */
+@media (pointer: coarse) {
+  button,
+  a,
+  [role="button"] {
+    min-height: var(--size-touch-target);
+    min-width: var(--size-touch-target);
   }
 }

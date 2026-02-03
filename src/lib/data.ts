@@ -14,7 +14,7 @@ import {
   mockActivity,
   getAgentStats as getMockAgentStats,
 } from "./mock-data";
-import type { Agent, Task, RalphLoop, CostData, DailyCost, ActivityItem, CostSummary } from "@/types";
+import type { Agent, Task, RalphLoop, ActivityItem, CostSummary } from "@/types";
 
 // Feature flag for using mock data
 const USE_MOCK_DATA = process.env.USE_MOCK_DATA === "true" || true;
