@@ -149,7 +149,7 @@ export function EmptyState({
           {action && (
             <Button
               variant="secondary"
-              size={size === "sm" ? "sm" : "default"}
+              size={size === "sm" ? "sm" : "md"}
               onClick={action.onClick}
             >
               {action.label}
@@ -158,7 +158,7 @@ export function EmptyState({
           {secondaryAction && (
             <Button
               variant="ghost"
-              size={size === "sm" ? "sm" : "default"}
+              size={size === "sm" ? "sm" : "md"}
               onClick={secondaryAction.onClick}
             >
               {secondaryAction.label}
