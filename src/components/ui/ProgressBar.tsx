@@ -24,11 +24,12 @@ const sizeStyles = {
   lg: "h-3",
 };
 
+// Gradient + glow styles per design system spec (M2)
 const variantStyles = {
-  default: "bg-[var(--color-brand-teal)]",
-  success: "bg-[var(--color-success)]",
-  warning: "bg-[var(--color-brand-orange)]",
-  error: "bg-[var(--color-error)]",
+  default: "bg-gradient-to-r from-brand-teal to-[#14A090] shadow-[0_0_10px_rgba(27,208,184,0.4)]",
+  success: "bg-gradient-to-r from-success to-[#4E9244] shadow-[0_0_10px_rgba(103,173,92,0.4)]",
+  warning: "bg-gradient-to-r from-brand-orange to-[#D9601C] shadow-[0_0_10px_rgba(242,114,41,0.4)]",
+  error: "bg-gradient-to-r from-error to-[#C44A44] shadow-[0_0_10px_rgba(222,94,87,0.4)]",
 };
 
 /**
