@@ -65,6 +65,37 @@ Mission Control is a **multi-agent orchestration dashboard** — a web UI for ma
 
 ---
 
+## ⚠️ Definition of Done (DoD)
+
+**No phase/feature is "complete" until ALL of these are checked:**
+
+### Required Before Marking Complete
+- [ ] **Both themes tested** — Switch to light mode and verify every page/component
+- [ ] **Real data flowing** — Not just mock data; actual varied/realistic content
+- [ ] **Features are functional** — Not just rendered; buttons work, forms submit, data persists
+- [ ] **All tests pass** — `npm test` and `npm run build` both succeed
+- [ ] **Design review** — Components match design system, no layout issues
+- [ ] **No hardcoded colors** — Use theme tokens (`text-foreground`, `bg-card`, etc.)
+
+### Agent-Specific QA Checklist (for Aegis)
+When testing a build:
+1. Toggle theme to light mode — verify all pages look correct
+2. Check for empty states — do they look intentional?
+3. Verify interactive elements actually work (not just display)
+4. Run E2E tests on critical paths
+5. Check console for errors
+6. Verify accessibility (tab navigation, screen reader labels)
+
+### Design Review Checklist (for Pixel)
+When reviewing UI:
+1. **Light mode check** — Required for every component
+2. **Real data vs mock** — Does it look good with varied content?
+3. **Feature verification** — Does clicking/interacting work?
+4. **Spacing consistency** — Follows 4px grid system
+5. **Color usage** — Semantic colors correct (red=error, green=success)
+
+---
+
 ## ⚠️ Testing Requirement
 
 **Every feature MUST include tests:**
@@ -230,30 +261,34 @@ npx supabase gen types typescript --project-id $PROJECT_ID > src/lib/supabase/ty
 **Final Commit:** `0d4336f` (Feb 3, 2026)
 
 ### Phase 2: Real-Time Integration — COMPLETE ✅
-- ✅ OpenClaw sync service (`src/lib/openclaw/sync.ts`, `cron.ts`, `agents.ts`, `tasks.ts`)
-- ✅ Sync API route (`/api/sync` POST/GET)
-- ✅ Real-time Supabase subscriptions (`src/lib/supabase/realtime.ts`)
-- ✅ Subscription hooks (`useAgentsSubscription`, `useTasksSubscription`, `useActivitiesSubscription`)
-- ✅ ConnectionStatus component
-- ✅ RealTimeDashboard wrapper
-- ✅ SyncStatus admin component
-- ✅ Design fixes (typography, theme switcher, progress bars, cards)
-- ✅ Agent detail page uses Supabase (not mock data)
-- ✅ Ralph Monitor fetches from API
+- ✅ OpenClaw sync service
+- ✅ Real-time Supabase subscriptions
+- ✅ Design fixes (typography, theme switcher, progress bars)
 
-**123 tests passing** (sync, cron, costs, theme)
+### Phase 3: Agent Controls & Task Management — COMPLETE ✅
+- ✅ Agent Controls (start/stop/restart/message, bulk actions)
+- ✅ Task Management (CRUD, Kanban drag-drop, status transitions)
+- ✅ Cost Analytics (API, budgets, date filtering, breakdowns)
+- ✅ Notifications (bell dropdown, persistence)
+- ✅ Search & Settings (⌘K command palette, settings page, keyboard shortcuts)
+- ✅ Polish (loading/empty/error states, tooltips, formatters)
 
-**Commits:**
-- `cd76544` - OpenClaw sync service fixes
-- `efd6ea2` - Theme switcher working
-- `dfeb5d9` - Real-time subscription hooks
-- `cd1aa78` - ConnectionStatus + RealTimeDashboard
-- `431876c` - ProgressBar gradient + glow
+**222 tests passing** (Feb 3, 2026)
+
+### Phase 4: Polish & Real Functionality — IN PROGRESS 🔄
+- ✅ P1.1 Light mode theme compatibility
+- ✅ P1.2 Tasks page demo data seeding
+- ✅ P1.3 Agent performance variance (unique metrics per agent)
+- ✅ P2.1 Real charts with agent-metrics data
+- ✅ P2.2 Ralph page theme fixes
+- ⏸️ P2.3 In-app messaging (pending decision)
+- ⏸️ P3 Infrastructure (Playwright, OpenClaw integration)
+- ⏸️ P4 Polish (design audit, mobile)
 
 ### Remaining Items
-- Ralph history/detail pages (nice to have)
-- Loading skeletons (nice to have)
-- Full demo mode flag (nice to have)
+- Playwright E2E test setup
+- Real OpenClaw integration (actions currently simulated)
+- Cost alert backend notifications
 
 ## Links
 
