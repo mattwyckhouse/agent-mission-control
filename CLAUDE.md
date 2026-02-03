@@ -229,17 +229,31 @@ npx supabase gen types typescript --project-id $PROJECT_ID > src/lib/supabase/ty
 
 **Final Commit:** `0d4336f` (Feb 3, 2026)
 
-### Phase 2: Real-Time Integration — IN PROGRESS
-- ⬜ OpenClaw sync service
-- ⬜ Real-time Supabase subscriptions
-- ⬜ Live agent status updates
-- ⬜ Task queue sync with TASKS.md
-- ⬜ Design fixes (pending Pixel audit)
+### Phase 2: Real-Time Integration — COMPLETE ✅
+- ✅ OpenClaw sync service (`src/lib/openclaw/sync.ts`, `cron.ts`, `agents.ts`, `tasks.ts`)
+- ✅ Sync API route (`/api/sync` POST/GET)
+- ✅ Real-time Supabase subscriptions (`src/lib/supabase/realtime.ts`)
+- ✅ Subscription hooks (`useAgentsSubscription`, `useTasksSubscription`, `useActivitiesSubscription`)
+- ✅ ConnectionStatus component
+- ✅ RealTimeDashboard wrapper
+- ✅ SyncStatus admin component
+- ✅ Design fixes (typography, theme switcher, progress bars, cards)
+- ✅ Agent detail page uses Supabase (not mock data)
+- ✅ Ralph Monitor fetches from API
 
-### Known Issues
-- Some pages still use mock data instead of live Supabase queries
-- Real-time subscriptions not yet implemented
-- Agent card click-through may have issues
+**123 tests passing** (sync, cron, costs, theme)
+
+**Commits:**
+- `cd76544` - OpenClaw sync service fixes
+- `efd6ea2` - Theme switcher working
+- `dfeb5d9` - Real-time subscription hooks
+- `cd1aa78` - ConnectionStatus + RealTimeDashboard
+- `431876c` - ProgressBar gradient + glow
+
+### Remaining Items
+- Ralph history/detail pages (nice to have)
+- Loading skeletons (nice to have)
+- Full demo mode flag (nice to have)
 
 ## Links
 
