@@ -8,6 +8,7 @@ interface GlassCardProps {
   glow?: boolean;
   hover?: boolean;
   padding?: "none" | "sm" | "md" | "lg";
+  onClick?: () => void;
 }
 
 /**
@@ -26,6 +27,7 @@ export function GlassCard({
   glow = false,
   hover = false,
   padding = "md",
+  onClick,
 }: GlassCardProps) {
   const glassStyles = {
     "glass-1": "bg-[rgba(17,18,20,0.24)]",
@@ -42,6 +44,7 @@ export function GlassCard({
 
   return (
     <div
+      onClick={onClick}
       className={cn(
         // Base styles
         "rounded-2xl",

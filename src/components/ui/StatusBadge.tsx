@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 export type AgentStatus = "active" | "idle" | "working" | "error" | "offline";
-export type TaskStatus = "urgent" | "action" | "in-progress" | "done";
+export type TaskStatus = "urgent" | "action" | "in-progress" | "done" | "success" | "cancelled" | "review";
 
 interface StatusBadgeProps {
   status: AgentStatus | TaskStatus;
@@ -66,6 +66,21 @@ const statusConfig: Record<
     color: "text-[#67AD5C]",
     bg: "bg-[rgba(103,173,92,0.15)]",
     label: "Done",
+  },
+  success: {
+    color: "text-[#67AD5C]",
+    bg: "bg-[rgba(103,173,92,0.15)]",
+    label: "Success",
+  },
+  cancelled: {
+    color: "text-[#6B7075]",
+    bg: "bg-[rgba(107,112,117,0.15)]",
+    label: "Cancelled",
+  },
+  review: {
+    color: "text-[#1BD0B8]",
+    bg: "bg-[rgba(27,208,184,0.15)]",
+    label: "Review",
   },
 };
 
