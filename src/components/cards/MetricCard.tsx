@@ -65,8 +65,8 @@ export function MetricCard({
     }
   };
 
-  // Get trend icon
-  const TrendIcon = () => {
+  // Get trend icon based on direction
+  const getTrendIcon = () => {
     if (!trend) return null;
     
     const iconClass = "w-3.5 h-3.5";
@@ -154,7 +154,7 @@ export function MetricCard({
             getTrendClasses(),
           )}
         >
-          <TrendIcon />
+          {getTrendIcon()}
           <span>{trend.value}</span>
         </div>
       )}
