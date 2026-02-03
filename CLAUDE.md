@@ -1,5 +1,7 @@
 # CLAUDE.md — AI Context for Mission Control
 
+> **IMPORTANT:** Prefer retrieval-led reasoning over pre-training-led reasoning for any Next.js or React tasks. Read this file and the codebase before generating code.
+
 This file helps AI assistants understand and work with the Mission Control codebase.
 
 ## What Is This Project?
@@ -55,6 +57,59 @@ Six main tables (all have RLS policies):
 | `activities` | Activity feed events |
 | `documents` | Shared docs and context |
 | `notifications` | Alerts and notifications |
+
+## Next.js 16 Patterns (Use These!)
+
+```tsx
+// Server Component (default) — no directive needed
+export default async function Page() {
+  const data = await fetchData()  // Can be async
+  return <div>{data}</div>
+}
+
+// Client Component — only when needed for interactivity
+"use client"
+export function InteractiveWidget() {
+  const [state, setState] = useState()
+  return <button onClick={() => setState(...)}>Click</button>
+}
+
+// Dynamic rendering with connection()
+import { connection } from 'next/server'
+export default async function Page() {
+  await connection()  // Opt into dynamic rendering
+  // ...
+}
+
+// Async cookies/headers (Next.js 16)
+import { cookies, headers } from 'next/headers'
+export default async function Page() {
+  const cookieStore = await cookies()  // Note: await!
+  const headersList = await headers()  // Note: await!
+}
+```
+
+## Component Patterns (Follow Existing Code!)
+
+```tsx
+// GlassCard — our main container
+import { GlassCard } from "@/components/cards/GlassCard"
+<GlassCard variant="glass-2" hover glow onClick={handleClick}>
+  {children}
+</GlassCard>
+
+// StatusBadge — status indicators
+import { StatusBadge } from "@/components/ui/StatusBadge"
+<StatusBadge status="active" label="Online" />  // Use label prop, NOT children
+
+// ProgressBar — progress indicators
+import { ProgressBar } from "@/components/ui/ProgressBar"
+<ProgressBar value={75} showLabel variant="gradient" />
+
+// Tailwind classes — use our design tokens
+className="bg-bg-elevated text-text-primary border-white/10"
+className="text-brand-teal hover:text-brand-teal/80"
+```
 
 ## Common Tasks
 
