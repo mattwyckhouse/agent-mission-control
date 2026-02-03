@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "seed": "npx tsx scripts/seed-demo-tasks.ts",
+    "seed:openclaw": "npx tsx scripts/seed-from-openclaw.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",
