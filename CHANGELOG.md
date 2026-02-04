@@ -60,6 +60,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **Theme-aware Ralph components** — Consistent colors in light/dark mode (293ebb8)
 - **Definition of Done** — Added to CLAUDE.md (888deef)
 
+#### Integration & Performance (Feb 3 Evening)
+- **OpenClaw webhook endpoint** — POST `/api/webhooks/openclaw` for real-time events from OpenClaw gateway (4b4adb7)
+- **Server-side pagination for Messages** — Improved performance for message history (82bc002)
+
 ### Fixed
 
 - Light mode theme compatibility for all components (cdfb3e1)
